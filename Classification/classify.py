@@ -35,7 +35,7 @@ class Classification(object):
         print 'Constructor'
 
     """ This function calculates the difference of a number in a list:"""
-    def calculate_difference(self, data, flag_print):
+    def calculate_difference(self, data, flag_print, kind):
         #print 'calculate difference'
         result = []
         original = data
@@ -43,13 +43,16 @@ class Classification(object):
 
         i = 1
         #it is a list:
-        list_data = data['samples']
+        if(kind > 0):
+            list_data = data['samples']
+        else:
+            list_data = data
         list_difference = []
 
         #calculate the difference:
         while i < len(list_data):
             #print list_data[i]
-            list_difference.append(list_data[i] - list_data[i-1])
+            list_difference.append(int(list_data[i]) - int(list_data[i-1]))
             i+=1
 
         if(flag_print > 0): 
@@ -67,16 +70,26 @@ class Classification(object):
         return total_difference
     
     """ Variation classification: algorithm using tolerance"""
-    def variation_classifier(self, data, tolerance, print_flag):
+    def variation_classifier(self, data, tolerance, print_flag, kind):
         
         #mean distance:
-        mean_difference = self.calculate_difference(data, 0)
-        list_data = data['samples']
-        list_sorted = list_data.copy()
-        list_sorted.sort()
-        xis = sorted(list_sorted)
+        mean_difference = self.calculate_difference(data, 0, kind)
+        if(kind > 0):
+            list_data = data['samples']
+            list_sorted = list_data.copy()
+            list_sorted.sort()
+            xis = sorted(list_sorted)
+            xis = xis.sort()
+        else:
+            list_data = data
+            list_sorted = list_data
+            list_sorted.sort()
+            xis = data
+            
         i = 1
-        previous = xis[0]
+        if(print_flag > 0):
+            print xis
+        previous = int(xis[0])
         mini_groups = []
         result = []
         if(print_flag > 0):
@@ -85,17 +98,18 @@ class Classification(object):
             
         #tolerance = 0.5
         while i < len(xis):
-            temp = xis[i]
+            temp = float(xis[i])
             if(print_flag > 0):
                 print "Value and group"
                 print temp
                 print len(result)
             #if(temp > previous +(previous * tolerance)):
-            if(temp > previous +(previous / tolerance)):
+            comp = float(previous) +(float(previous) / tolerance)
+            if(temp > comp):
                 result.append(mini_groups)
                 mini_groups = []
             mini_groups.append(temp)
-            previous = temp
+            previous = float(temp)
             i+=1
         result.append(mini_groups)
         
@@ -304,6 +318,16 @@ class Classification(object):
         list_a[index] = aux
             
         return list_a
+    
+#Class used for the tests:
+class Run(object):
+    info = []
+    classification = []
+    
+    def __init__(self, init_value, init_classification):
+        self.info = init_value
+        self.classification = init_classification
+    
 def test():
     #simulation()
     ok = Gauss(200, 50).gen_samples(1000, 0)
@@ -391,7 +415,7 @@ def test3():
     while i < 20:
         if(print_value > 0):
             print "Classification"
-        result_groups =  classificator.variation_classifier(mix, i, print_value)
+        result_groups =  classificator.variation_classifier(mix, i, print_value, 1)
         #print result_groups
         result_sse = classificator.calculate_SSE(result_groups, len(result_groups), print_value)
         #print result_sse
@@ -416,7 +440,7 @@ def test3():
     print "best k:"
     print round(table[best_k][1],4)
     
-    result_groups =  classificator.variation_classifier(mix, round(table[best_k][0],4), 0)
+    result_groups =  classificator.variation_classifier(mix, round(table[best_k][0],4), 0, 1)
     result_splited = classificator.print_groups(result_groups)
 
     #merge:
@@ -424,7 +448,63 @@ def test3():
     
     fig = plt.figure()
     plot(total_tolerance,total_sse, "SSE", "Tolerance")
-    plot(total_tolerance,total_groups, "N Groups", "Tolerance") 
+    plot(total_tolerance,total_groups, "N Groups", "Tolerance")
+
+    return result_groups
+
+def testClassification(mix, print_value):
+    print "Test Classification"
+    #mix = pd.concat([ok, bad], ignore_index=True)
+    
+    classificator = Classification()
+    i = 0.1
+
+    table = []
+    total_groups = []
+    total_sse = []
+    total_tolerance = []
+    
+    while i < 20:
+        if(print_value > 0):
+            print "Classification"
+            print mix
+        result_groups =  classificator.variation_classifier(mix, i, print_value, 0)
+        #print result_groups
+        result_sse = classificator.calculate_SSE(result_groups, len(result_groups), print_value)
+        #print result_sse
+        i+= 1
+        hash_tolerance_SSE = []
+        hash_tolerance_SSE.append(i)
+        hash_tolerance_SSE.append(len(result_groups))
+        hash_tolerance_SSE.append(result_sse)
+
+        total_groups.append(len(result_groups))
+        total_sse.append(result_sse)
+        total_tolerance.append(i)
+        
+        table.append(hash_tolerance_SSE)
+    print table
+    
+    best_k = classificator.best_k({'n_groups': total_groups, 'sse': total_sse, 'tolerance': total_tolerance})
+    print table[best_k]
+
+    print "best tolerance:"
+    print round(table[best_k][0],4)
+    print "best k:"
+    print round(table[best_k][1],4)
+    
+    result_groups =  classificator.variation_classifier(mix, round(table[best_k][0],4), print_value, 0)
+    if(print_value > 0):
+        result_splited = classificator.print_groups(result_groups)
+
+    #merge:
+    #print merge(mix, result_splited)
+    
+    fig = plt.figure()
+    plot(total_tolerance,total_sse, "SSE", "Tolerance")
+    plot(total_tolerance,total_groups, "N Groups", "Tolerance")
+
+    return result_groups
 
 def test2():
     print "Test 2"
@@ -474,7 +554,9 @@ def test2():
     fig = plt.figure()
     plot(total_tolerance,total_sse, "SSE", "Tolerance")
     plot(total_tolerance,total_groups, "N Groups", "Tolerance")
-
+    
+    #return the results:
+    return result_groups
     
     
 def normal_distribution():
@@ -500,6 +582,7 @@ def normal_distribution():
     
     return ok
 
+#Plot:
 def plot(x, y, labely, labelx):
     #plt.plot([1,2,3,4])
     
@@ -510,6 +593,7 @@ def plot(x, y, labely, labelx):
     
     return plt
 
+#Test number 4:
 def test4():
     ok = Gauss(200, 50).gen_samples(1000, 0)
     classifier = Classification()
@@ -518,10 +602,80 @@ def test4():
     #kmeans(self, n_groups, n_items, numbers):
     result = classifier.kmeans(1, len(test), test)
     print result
+
+def csv_read(position):
+    import csv
+    #position = 0 
+    temp = []
+    path = '/home/frank/Desktop/build-trouble-Desktop-Debug/troubleSample.csv'
+    with open(path) as csvfile:
+        readCSV = csv.reader(csvfile, delimiter=',')
+        for row in readCSV:
+            if(len(row) > position):
+                temp.append(int(row[position]))
+                
+    return temp
+
+def testEachCSVCollumn(col, test, print_flag):
+    #classification for first collumn
+    read_group1 = csv_read(col)
+    print read_group1
+    test.append(read_group1)
+    
+    result = testClassification(read_group1, 0)
+
+    if(print_flag > 0):
+        print result
+    return result
+
+#This function finds the classification 
+def find_group(test, number):
+
+    j = 0
+    for each in test:
+        i = 0
+        while i < len(each):
+            if(each[i] == number):
+                return j    
+            i+=1
+        j+=1
+
+#This function connects for each run:
+def connect(test):
+    "Connect"
+    totalRun = []
+    position = 0
+    while position < 50:
+        run = []
+        for each in test:
+            run.append(each[position])
+            
+        totalRun.append(run)
+        position+=1
+    print totalRun
+
+    return totalRun
+
+def testCSV():
+    #normal_distribution()
+    test = []
+    result_classication = []
+    
+    #Classify:
+    result_classication.append(testEachCSVCollumn(1, test, 0))
+    result_classication.append(testEachCSVCollumn(2, test, 0))
+    result_classication.append(testEachCSVCollumn(3, test, 0))
+    result_classication.append(testEachCSVCollumn(4, test, 0))
+    
+    #Connect with run:
+    print result_classication
+    result = connect(test)
+    #show the classification:
     
 def main():
-    #normal_distribution()
-    test3()
+    #testCSV()
+    result = find_group([[1,2,4,5,6],[3,4,5,6]],4)
+    print result
     
 if __name__ == '__main__':
     main()

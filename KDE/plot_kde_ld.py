@@ -88,31 +88,48 @@ ax[0, 1].set_title('Available Kernels')
 
 #----------------------------------------------------------------------
 # Plot a 1D density example
-def main():
-    "Main function"
-    N = 100
-    np.random.seed(1)
+def main(n_p_given, seed_given):
+    "Main function, n_p is the number of points"
+    N = n_p_given
+    np.random.seed(seed_given)
     X = np.concatenate((np.random.normal(0, 1, 0.3 * N),
                     np.random.normal(5, 1, 0.7 * N)))[:, np.newaxis]
 
-    X_plot = np.linspace(-5, 10, 1000)[:, np.newaxis]
+    # plot of the numbers:
+    init_value = -5
+    final_value = 10
+    samples = 1000
+    X_plot = np.linspace(init_value, final_value, samples)[:, np.newaxis]
 
-    true_dens = (0.3 * norm(0, 1).pdf(X_plot[:, 0])
-             + 0.7 * norm(5, 1).pdf(X_plot[:, 0]))
+
+    para1 = 0.3
+    para2 = 0.7
+    para3 = 0 # mean
+    para4 = 1 # variance
+    para5 = 5 # mean
+    para6 = 1 # variance
+    
+    true_dens = (para1 * norm(para3, para4).pdf(X_plot[:, 0])
+             + para2 * norm(para5, para6).pdf(X_plot[:, 0]))
 
     fig, ax = plt.subplots()
+    
     ax.fill(X_plot[:, 0], true_dens, fc='black', alpha=0.2,
         label='input distribution')
-
+    
+    # the three possible distributions:
     for kernel in ['gaussian', 'tophat', 'epanechnikov']:
+        # fit: fit the kernel density model on the data
         kde = KernelDensity(kernel=kernel, bandwidth=0.5).fit(X)
         log_dens = kde.score_samples(X_plot)
         ax.plot(X_plot[:, 0], np.exp(log_dens), '-',
                 label="kernel = '{0}'".format(kernel))
-
+    # Number of points:
     ax.text(6, 0.38, "N={0} points".format(N))
 
     ax.legend(loc='upper left')
+    # shape is a tuple that gives you an indication of the number of dimensions in the array:
+    
     ax.plot(X[:, 0], -0.005 - 0.01 * np.random.random(X.shape[0]), '+k')
 
     ax.set_xlim(-4, 9)
@@ -120,4 +137,4 @@ def main():
     plt.show()
 
 #Main function:
-main();
+main(100, 3);
