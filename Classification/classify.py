@@ -629,9 +629,13 @@ def testEachCSVCollumn(col, test, print_flag):
     return result
 
 #This function finds the classification 
-def find_group(test, number):
-
+def find_group(test, number, print_flag):
+    "Find group"
     j = 0
+    if(print_flag > 0):
+        for each in test:
+            print each
+    
     for each in test:
         i = 0
         while i < len(each):
@@ -639,9 +643,10 @@ def find_group(test, number):
                 return j    
             i+=1
         j+=1
+    return -1
 
-#This function connects for each run:
-def connect(test):
+#This function connects for each run and the values of each metric:
+def connect(test, print_flag):
     "Connect"
     totalRun = []
     position = 0
@@ -652,9 +657,51 @@ def connect(test):
             
         totalRun.append(run)
         position+=1
-    print totalRun
+
+    if(print_flag > 0):
+        print totalRun
 
     return totalRun
+
+#This function classify each run:
+#[[2, 3, 1, 1088], [2, 3, 1, 1088], [2, 3, 1, 1089]
+def classify_each_run(data, print_flag):
+    print "Classify each run"
+
+    index = 0
+    max = 4
+    position_in_list = 0
+    #
+    list_aux = []
+    list_aux1 = [[1,2,4,5,6],[3,4,5,6]]
+    list_aux2 = [[0,2,4,5,6],[3,3,5,8]]
+    
+    list_aux.append(list_aux1)
+    list_aux.append(list_aux2)
+
+    print list_aux
+    while index < max:
+        for each in data:
+            if(print_flag > 0):
+                aux = each[index]
+                result = find_group(list_aux[position_in_list], aux, 0)
+                print aux
+                print result
+        index +=1
+        
+#This function creates the runs for testing and returns as list
+def create_runs(data, print_flag):
+    "Create runs"
+    list_runs = []
+
+    for each in data:
+        eachRun = Run(each, each)
+        list_runs.append(eachRun)
+
+    if(print_flag > 0):
+        print list_runs
+        
+    return list_runs
 
 def testCSV():
     #normal_distribution()
@@ -669,13 +716,21 @@ def testCSV():
     
     #Connect with run:
     print result_classication
-    result = connect(test)
+    result = connect(test, 0)
+
+    classify_each_run(result, 1)
     #show the classification:
     
+
+#Main function to test all:
 def main():
-    #testCSV()
-    result = find_group([[1,2,4,5,6],[3,4,5,6]],4)
-    print result
+    testCSV()
+    #for each column 
+    #result = find_group([[1,2,4,5,6],[3,4,5,6]],4)
+    #print result
+    #test = [[2, 3, 1, 1088], [2, 3, 1, 1088], [2, 3, 1, 1089], [2, 3, 1, 1090]]
+    #create_runs(test,0)
+    #classify_each_run(test, 1)
     
 if __name__ == '__main__':
     main()
