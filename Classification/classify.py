@@ -19,6 +19,9 @@ import math
 
 import pdb
 
+import plotly
+import plotly.plotly as py
+
 class Gauss(object):
     def __init__(self, mean=0, stddev=1):
         self.mean = mean
@@ -324,9 +327,25 @@ class Run(object):
     info = []
     classification = []
     
-    def __init__(self, init_value, init_classification):
+    def __init__(self, init_value):
         self.info = init_value
-        self.classification = init_classification
+
+    def set_classification(self, data):
+        self.classification = data
+        
+    def print_(self):
+        print self.info
+        print self.classification
+        
+    def __str__(self):
+        str1 = ''.join(self.info)
+        return str1
+
+    def get_info(self):
+        return self.info
+
+    def get_classification(self):
+        return self.classification
     
 def test():
     #simulation()
@@ -452,7 +471,7 @@ def test3():
 
     return result_groups
 
-def testClassification(mix, print_value):
+def testClassification(mix, print_flag, plot_flag):
     print "Test Classification"
     #mix = pd.concat([ok, bad], ignore_index=True)
     
@@ -465,12 +484,12 @@ def testClassification(mix, print_value):
     total_tolerance = []
     
     while i < 20:
-        if(print_value > 0):
+        if(print_flag > 0):
             print "Classification"
             print mix
-        result_groups =  classificator.variation_classifier(mix, i, print_value, 0)
+        result_groups =  classificator.variation_classifier(mix, i, print_flag, 0)
         #print result_groups
-        result_sse = classificator.calculate_SSE(result_groups, len(result_groups), print_value)
+        result_sse = classificator.calculate_SSE(result_groups, len(result_groups), print_flag)
         #print result_sse
         i+= 1
         hash_tolerance_SSE = []
@@ -493,16 +512,17 @@ def testClassification(mix, print_value):
     print "best k:"
     print round(table[best_k][1],4)
     
-    result_groups =  classificator.variation_classifier(mix, round(table[best_k][0],4), print_value, 0)
-    if(print_value > 0):
+    result_groups =  classificator.variation_classifier(mix, round(table[best_k][0],4), print_flag, 0)
+    if(print_flag > 0):
         result_splited = classificator.print_groups(result_groups)
 
     #merge:
     #print merge(mix, result_splited)
-    
-    fig = plt.figure()
-    plot(total_tolerance,total_sse, "SSE", "Tolerance")
-    plot(total_tolerance,total_groups, "N Groups", "Tolerance")
+
+    if(plot_flag > 0):
+        fig = plt.figure()
+        plot(total_tolerance,total_sse, "SSE", "Tolerance")
+        plot(total_tolerance,total_groups, "N Groups", "Tolerance")
 
     return result_groups
 
@@ -616,13 +636,13 @@ def csv_read(position):
                 
     return temp
 
-def testEachCSVCollumn(col, test, print_flag):
+def testEachCSVCollumn(col, test, print_flag, plot_flag):
     #classification for first collumn
     read_group1 = csv_read(col)
     print read_group1
     test.append(read_group1)
     
-    result = testClassification(read_group1, 0)
+    result = testClassification(read_group1, 0 , 0)
 
     if(print_flag > 0):
         print result
@@ -664,73 +684,203 @@ def connect(test, print_flag):
     return totalRun
 
 #This function classify each run:
-#[[2, 3, 1, 1088], [2, 3, 1, 1088], [2, 3, 1, 1089]
-def classify_each_run(data, print_flag):
+# Data: [[2, 3, 1, 1088], [2, 3, 1, 1088], [2, 3, 1, 1089]
+# Result: [[2, 2, 2, 2], [2,3,4,5]]
+def classify_each_run(data, result_classification, print_flag):
     print "Classify each run"
 
     index = 0
     max = 4
     position_in_list = 0
-    #
+    
     list_aux = []
     list_aux1 = [[1,2,4,5,6],[3,4,5,6]]
     list_aux2 = [[0,2,4,5,6],[3,3,5,8]]
     
     list_aux.append(list_aux1)
     list_aux.append(list_aux2)
-
-    print list_aux
-    while index < max:
-        for each in data:
-            if(print_flag > 0):
-                aux = each[index]
-                result = find_group(list_aux[position_in_list], aux, 0)
-                print aux
-                print result
-        index +=1
+    if(print_flag > 0):
+        print data
+        
+    allResults = []
+    max = 5
+    for each in data:
+            temp = [] #[1,1,1,0]
+            i = 0
+            while i < max:
+                    aux = each[i]
+                    result = find_group(result_classification[i], aux, 0)
+                    temp.append(result)
+                    i+=1                  
+            allResults.append(temp) #[[1,1,1,0],[1,1,1,0]]
+            
+    return allResults
         
 #This function creates the runs for testing and returns as list
-def create_runs(data, print_flag):
-    "Create runs"
+def create_runs(data, results, print_flag):
+    print "Create runs. Data:"
     list_runs = []
-
+        
     for each in data:
-        eachRun = Run(each, each)
+        if(print_flag > 0):
+            print each
+        eachRun = Run(each)
         list_runs.append(eachRun)
 
+    i = 0
+    while i < len(list_runs):        
+        each = list_runs[i]
+        each.set_classification(results[i])
+        i+=1
+
+    
     if(print_flag > 0):
-        print list_runs
+        print "Classification"
+        for each in list_runs:
+            print each.get_classification()
         
     return list_runs
 
 def testCSV():
     #normal_distribution()
     test = []
-    result_classication = []
+    groups_classification = []
     
     #Classify:
-    result_classication.append(testEachCSVCollumn(1, test, 0))
-    result_classication.append(testEachCSVCollumn(2, test, 0))
-    result_classication.append(testEachCSVCollumn(3, test, 0))
-    result_classication.append(testEachCSVCollumn(4, test, 0))
+    groups_classification.append(testEachCSVCollumn(0, test, 0, 0))
+    groups_classification.append(testEachCSVCollumn(1, test, 0, 0))
+    groups_classification.append(testEachCSVCollumn(2, test, 0, 0))
+    groups_classification.append(testEachCSVCollumn(3, test, 0, 0))
+    groups_classification.append(testEachCSVCollumn(4, test, 0, 0))
     
-    #Connect with run:
-    print result_classication
+    #Connect with run:    
     result = connect(test, 0)
-
-    classify_each_run(result, 1)
-    #show the classification:
     
+    #[[[1, 2, 4, 5, 6], [3, 4, 5, 6]], [[0, 2, 4, 5, 6], [3, 3, 5, 8]]]
+    classification_result = classify_each_run(result, groups_classification, 0)
 
+    #show the classification:
+    create_runs(result, classification_result, 1)
+    
+def createRuns(print_flag, plot_flag):
+    i =0
+    temp = []
+    max = 5
+    while i < max: 
+        temp.append(csv_read(i))
+        i+=1
+
+    
+    j = 0
+    totalRuns = []
+    total = 50
+    while j < total:
+        runs = []
+        i = 0
+        while i < 5:
+            runs.append(temp[i][j])
+            i+=1
+        totalRuns.append(runs)
+        j+=1
+
+    list_runs = []
+        
+    for each in totalRuns:
+        if(print_flag > 0):
+            print each
+        eachRun = Run(each)
+        list_runs.append(eachRun)
+
+    
+    sumCollums = []
+    i = 0
+    while i < max:
+        temp = []
+        for each in list_runs:
+            eachInfo = each.get_info()
+            temp.append(eachInfo[i])
+        sumCollums.append(temp)
+        i+=1
+
+    result = []
+    for eachCollum in sumCollums:
+        print eachCollum
+        eachCollumn_result = testClassification(eachCollum, 0 , 0)
+        data = do_histogram(eachCollumn_result, 1)
+        test_plot(data, 1)
+        result.append(eachCollumn_result)
+        if(print_flag > 0):
+            print 'result' 
+            print eachCollumn_result
+
+    for each in list_runs:
+        eachInfo = each.get_info()
+        i = 0
+        temp = []
+        while i < max:
+            temp.append(find_group(result[i], eachInfo[i], 0))
+            i+=1
+        if(print_flag > 0):
+            print temp
+        each.set_classification(temp)
+
+    analysis(list_runs)
+        
+    return list_runs
+
+#This function analysis the classification within the runs:
+def analysis(list_runs):
+    for each in list_runs:
+        print each.get_classification()
+    
+#this function tests plotly - data = [[0, 3], [1, 3], [2, 14] ]
+def test_plot(data, print_flag):
+    #[[0, 3], [1, 3], [2, 14] ]
+    #data = [[0, 3], [1, 3], [2, 14] ]
+    
+    tempx = []
+    tempy = []
+    if(print_flag > 0):
+        print "data"
+        print data
+        
+    for each in data:
+        print each
+        tempx.append(each[0])
+        tempy.append(each[1])
+
+    plt.plot(tempx, tempy, 'ro')
+    max = 50
+    x_lim = 4
+    plt.axis([0, x_lim, 0, max])
+    plt.show()
+    
+#This function does a histogram:
+def do_histogram(data, print_flag):
+    #[[0,2,2],[1,1,1],[4,4,4]] -> [0,3] [1,3]
+    print "do histogram"
+    if(print_flag > 0):
+        print data
+
+    initial_number = 1
+    j = initial_number
+    temp = []
+    for each in data:
+        count = 0
+        for eachm in each:
+            count +=1
+        aux = []
+        aux.append(j)
+        aux.append(count)
+        temp.append(aux)
+        j+=1
+        
+    return temp
+       
 #Main function to test all:
 def main():
-    testCSV()
-    #for each column 
-    #result = find_group([[1,2,4,5,6],[3,4,5,6]],4)
-    #print result
-    #test = [[2, 3, 1, 1088], [2, 3, 1, 1088], [2, 3, 1, 1089], [2, 3, 1, 1090]]
-    #create_runs(test,0)
-    #classify_each_run(test, 1)
+    #testCSV()
+    createRuns(1, 1)
     
 if __name__ == '__main__':
     main()
