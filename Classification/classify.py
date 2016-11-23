@@ -22,6 +22,8 @@ import pdb
 import plotly
 import plotly.plotly as py
 
+import os
+
 class Gauss(object):
     def __init__(self, mean=0, stddev=1):
         self.mean = mean
@@ -627,8 +629,11 @@ def csv_read(position):
     import csv
     #position = 0 
     temp = []
-    path = '/home/frank/Desktop/build-trouble-Desktop-Debug/troubleSample.csv'
-    with open(path) as csvfile:
+    script_dir = os.path.dirname(__file__)
+    rel_path = "testsFiles/troubleSample.csv"
+    #path = 'src/troubleSample.csv'
+    abs_file_path = os.path.join(script_dir, rel_path)
+    with open(abs_file_path) as csvfile:
         readCSV = csv.reader(csvfile, delimiter=',')
         for row in readCSV:
             if(len(row) > position):
