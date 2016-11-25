@@ -55,19 +55,17 @@ class Classification(object):
         list_difference = []
 
         #calculate the difference:
-        while i < len(list_data):
+        for i in range(len(list_data)):
             #print list_data[i]
             list_difference.append(int(list_data[i]) - int(list_data[i-1]))
-            i+=1
 
         if(flag_print > 0): 
             print len(list_difference)
             
         i = 0
         total_difference = 0
-        while i < len(list_difference):
+        for i in range(len(list_difference)):
             total_difference += list_difference[i]
-            i+=1
                 
         #mean:
         total_difference /= len(list_difference)
@@ -102,7 +100,7 @@ class Classification(object):
             print self.valid_numbers(xis)
             
         #tolerance = 0.5
-        while i < len(xis):
+        for i in range(len(xis)):
             temp = float(xis[i])
             if(print_flag > 0):
                 print "Value and group"
@@ -115,7 +113,6 @@ class Classification(object):
                 mini_groups = []
             mini_groups.append(temp)
             previous = float(temp)
-            i+=1
         result.append(mini_groups)
         
         if(print_flag>0):
@@ -150,17 +147,16 @@ class Classification(object):
         SSE = 0
         i = 0
         k = 0
-        while i < len(list_groups):
+        for i in range(len(list_groups)):
             x = list_groups[i]
             if(len(x) > 0):
                 if(flag_print > 0):
                     print x
                 j = 0
-                while j < len(x):
+                for j in range(len(x)):
                      eachDistance = (x[j] - centroids[i]) * (x[j] - centroids[i])
                      SSE += eachDistance
                      j+=1
-            i+=1
 
         return SSE
 
@@ -179,21 +175,19 @@ class Classification(object):
 
         i = 1
         gap = 0
-        while i < len(calculated_SSE):
+        for i in range(len(calculated_SSE)):
             current = calculated_SSE[i -1] - calculated_SSE[i]
             if(current > gap):
                 gap = current
                 maxp1 = i
-            i+=1
 
         gap = 0
         i = 1
-        while i < len(calculated_SSE):
+        for i in range(len(calculated_SSE)):
             current = calculated_SSE[i -1] - calculated_SSE[i]
             if(current < gap):
                 gap = current
                 minp1 = i
-            i+=1
 
         #return minp1
         #return {'b_n_groups': n_groups[maxp1],'b_tolerance': tolerance[maxp1], 'b_sse': calculated_SSE[maxp1]}
@@ -219,15 +213,13 @@ class Classification(object):
         i = 0
         groups = []
         numbers = []
-        while i < len(data):
+        for i in range(len(data)):
             j = 0
             temp = data[i]
-            while j < len(temp):
+            for j in range(len(temp)):
                 print '{0:2f} {1:3d}'.format(temp[j], i+1)
                 groups.append(i+1)
                 numbers.append(temp[j])
-                j+=1
-            i+=1
         return {'result': numbers, 'guess':groups}
     
     #validating the sort:
@@ -298,9 +290,8 @@ class Classification(object):
     def averageD(self, list_n):
         sum = 0.0;
         i = 0
-        while i < len(list_n):
+        for i in range(len(list_n)):
             sum += list_n[i]
-            i+=1
         return (sum/len(list_n))
 
     #equals
@@ -663,10 +654,9 @@ def find_group(test, number, print_flag):
     
     for each in test:
         i = 0
-        while i < len(each):
+        for i in range(len(each)):
             if(each[i] == number):
                 return j    
-            i+=1
         j+=1
     return -1
 
@@ -733,10 +723,9 @@ def create_runs(data, results, print_flag):
         list_runs.append(eachRun)
 
     i = 0
-    while i < len(list_runs):        
+    for i in range(len(list_runs)):     
         each = list_runs[i]
         each.set_classification(results[i])
-        i+=1
 
     
     if(print_flag > 0):
@@ -808,11 +797,13 @@ def createRuns(print_flag, plot_flag):
         i+=1
 
     result = []
+    i = 0
     for eachCollum in sumCollums:
         print eachCollum
         eachCollumn_result = testClassification(eachCollum, 0 , 0)
         data = do_histogram(eachCollumn_result, 1)
-        test_plot(data, 1)
+        test_plot(data, 1, i)
+        i+=1
         result.append(eachCollumn_result)
         if(print_flag > 0):
             print 'result' 
@@ -839,7 +830,7 @@ def analysis(list_runs):
         print each.get_classification()
     
 #this function tests plotly - data = [[0, 3], [1, 3], [2, 14] ]
-def test_plot(data, print_flag):
+def test_plot(data, print_flag, i):
     #[[0, 3], [1, 3], [2, 14] ]
     #data = [[0, 3], [1, 3], [2, 14] ]
     
@@ -854,11 +845,16 @@ def test_plot(data, print_flag):
         tempx.append(each[0])
         tempy.append(each[1])
 
+    plt.title('Classification ' + str(i))
+    plt.xlabel('Group number')
+    plt.ylabel('Quantity')
     plt.plot(tempx, tempy, 'ro')
     max = 50
     x_lim = 4
     plt.axis([0, x_lim, 0, max])
-    plt.show()
+    #plt.show()
+    name = str(i)+".svg"
+    plt.savefig(name, transparent = True)
     
 #This function does a histogram:
 def do_histogram(data, print_flag):
