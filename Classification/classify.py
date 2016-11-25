@@ -24,6 +24,8 @@ import plotly.plotly as py
 
 import os
 
+from printdebug import debug
+
 class Gauss(object):
     def __init__(self, mean=0, stddev=1):
         self.mean = mean
@@ -91,7 +93,8 @@ class Classification(object):
             
         i = 1
         if(print_flag > 0):
-            print xis
+            debug(xis)
+            
         previous = int(xis[0])
         mini_groups = []
         result = []
@@ -826,9 +829,41 @@ def createRuns(print_flag, plot_flag):
 
 #This function analysis the classification within the runs:
 def analysis(list_runs):
-    for each in list_runs:
-        print each.get_classification()
-    
+    print "Analysis"
+    temp = []
+    types = []
+    types_list = []
+    result = []
+    j = 0
+    max = 5
+    while j < max:
+        for each in list_runs:
+            info = each.get_classification()
+            temp.append(info[j])
+
+        types.append(temp[0])
+        
+        for i in range(len(temp)):
+            if(temp[i] not in types):
+                types.append(temp[i])
+
+        result = find_types(types)
+        j+=1
+        types_list.append(result)
+        
+    print types_list
+    return 0
+
+#this function finds the types of a distribution:
+def find_types(temp):
+    types = []
+    types.append(temp[0])
+    for i in range(len(temp)):
+        if(temp[i] not in types):
+            types.append(temp[i])
+
+    return types
+
 #this function tests plotly - data = [[0, 3], [1, 3], [2, 14] ]
 def test_plot(data, print_flag, i):
     #[[0, 3], [1, 3], [2, 14] ]
@@ -837,8 +872,7 @@ def test_plot(data, print_flag, i):
     tempx = []
     tempy = []
     if(print_flag > 0):
-        print "data"
-        print data
+        debug(data)
         
     for each in data:
         print each
