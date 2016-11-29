@@ -848,12 +848,80 @@ def analysis(list_runs):
                 types.append(temp[i])
 
         result = find_types(types)
-        j+=1
         types_list.append(result)
-        
+        j+=1
+
+    #[[1, 0], [1, 0, 2], [1, 0, 2], [1, 0, 2], [1, 0, 2]]
     print types_list
+
+    i = 0
+    list_info = []
+    for each in types_list:
+        print each
+        for j in range(len(each)):
+            calculate_correlation(each[j], list_runs,i)
+        i+=1
+           
     return 0
 
+
+#this function calculates the correlation of a specific number, in a index, to the classification
+def calculate_correlation(specific, list_runs, index):
+    print 'calculate correlation metric:' + str(index)
+    print 'group:' + str(specific)
+    
+    result = []
+    temp = []
+    total = 0
+    for each in list_runs:
+        info = each.get_classification()
+        if (info[index] is specific):
+            #print info
+            total +=1
+            result.append(info)
+
+    #Count the repetitions or similarities:
+    similarities(index, specific, result)
+    
+    return result
+
+#this function finds the types of a distribution:
+def similarities(index, specific, result):
+    print 'similarities'
+    sim = []
+    position = 0
+    po_0 = []
+    po_1 = []
+    po_2 = []
+    po_3 = [] 
+    for each in result:
+        for position in range(len(each)):
+            if(position is not index):
+                if(position is 0):
+                    if(each[position] not in po_0):
+                        po_0.append(each[position])
+                        
+                if(position is 1):
+                    if(each[position] not in po_1):
+                        po_1.append(each[position])
+                if(position is 2):
+                    if(each[position] not in po_2):
+                        po_2.append(each[position])
+                    
+                if(position is 3):
+                    if(each[position] not in po_3):
+                        po_3.append(each[position])
+                            
+    sim.append(po_0)
+    sim.append(po_1)
+    sim.append(po_2)
+    sim.append(po_3)
+    if not sim:
+        print("List is empty")
+    else:
+        print sim
+    
+    
 #this function finds the types of a distribution:
 def find_types(temp):
     types = []
