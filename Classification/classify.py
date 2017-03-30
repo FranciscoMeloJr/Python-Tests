@@ -26,56 +26,8 @@ import os
 
 from printdebug import debug
 
-#Class used for classification:
-class Run(object):
-    """A simple example class"""
-    id = -1
-    metrics = -1
-    info = []
-    classification = []
+from execution import Execution
 
-    def __init__(self, list):
-        self.metrics = list
-
-    def __init__(self, id, list):
-        self.id = id
-        self.metrics = list
-
-    def show(self):
-        print (self.metrics)
-        return
-
-    def get_metrics_1(self):
-        return self.metrics[0]
-
-    def get_metrics_index(self, index):
-        return int(self.metrics[index])
-
-    def print_metrics(self):
-        print self.metrics
-
-
-    def __init__(self, init_value):
-        self.info = init_value
-
-    def set_classification(self, data):
-        self.classification = data
-
-    def print_(self):
-        print
-        self.info
-        print
-        self.classification
-
-    def __str__(self):
-        str1 = ''.join(self.info)
-        return str1
-
-    def get_info(self):
-        return self.info
-
-    def get_classification(self):
-        return self.classification
 
 # # Class used for the tests:
 # class Run(object):
@@ -829,31 +781,6 @@ def testCSV():
     #show the classification:
     create_runs(result, classification_result, 1)
 
-"This function will create the runs (the classe defined above)"
-def create_list_Runs_object(list_metrics):
-    list_objects = []
-    for each in list_metrics:
-        x = Run(each)
-        list_objects.append(x)
-
-    return list_objects
-
-"This function will print each run"
-def printRuns(list_runs):
-    for each in list_runs:
-        print each
-
-"This function will create the runs from the csv file"
-def createRuns(print_flag):
-    i =0
-    temp = []
-    max = 5
-    temp = csv_read_full("testsFiles/troubleSample.csv")
-    list_runs = create_list_Runs_object(temp)
-
-    printRuns(list_runs)
-
-    print temp
 
     #return list_runs
 
@@ -963,7 +890,7 @@ def similarities(index, specific, result):
     print "Porcentagem de relacao " + str(x)
     
     
-    
+"Find the types of a distribution"
 #this function finds the types of a distribution:
 def find_types(temp):
     types = []
@@ -974,8 +901,9 @@ def find_types(temp):
 
     return types
 
+"Plotly function"
 #this function tests plotly - data = [[0, 3], [1, 3], [2, 14] ]
-def test_plot(data, print_flag, i):
+def test_plot(data, print_flag, plot, i):
     #[[0, 3], [1, 3], [2, 14] ]
     #data = [[0, 3], [1, 3], [2, 14] ]
     
@@ -996,15 +924,16 @@ def test_plot(data, print_flag, i):
     max = 50
     x_lim = 4
     plt.axis([0, x_lim, 0, max])
-    #plt.show()
+    if(plot):
+        plt.show()
     name = str(i)+".svg"
     plt.savefig(name, transparent = True)
-    
-#This function does a histogram:
+
+"This function does a histogram"
 def do_histogram(data, print_flag):
     #[[0,2,2],[1,1,1],[4,4,4]] -> [0,3] [1,3]
     print "do histogram"
-    if(print_flag > 0):
+    if(print_flag):
         print data
 
     initial_number = 1
@@ -1021,11 +950,78 @@ def do_histogram(data, print_flag):
         j+=1
         
     return temp
-       
-#Main function to test all:
+
+
+"This function will create the runs (the classe defined above)"
+def create_list_Executions_object(list_metrics, flag):
+    list_objects = []
+    i = 0
+    for each in list_metrics:
+        x = Execution(i, each)
+        list_objects.append(x)
+        if(flag):
+            x.show()
+        i = i + 1
+
+
+    return list_objects
+
+"This function will take a specific metric from a list of runs Objects"
+def take_index_metrics(list_executions, index, flag):
+    print index
+    list_metrics_index = []
+    for each in list_executions:
+        list_metrics_index.append(each.get_index_metrics(index))
+
+    if(flag):
+        print list_metrics_index
+
+    return list_metrics_index
+
+"This function will print each run"
+def printExecutions(list_runs):
+    for each in list_runs:
+        each.show()
+
+"This function will create the runs from the csv file Josias"
+def createExecutions(print_flag):
+    temp_data = csv_read_full("testsFiles/troubleSample.csv")
+    list_executions = create_list_Executions_object(temp_data, False)
+
+    #To print the execution
+    printExecutions(list_executions)
+
+    #take a metric:
+
+    #Classify each collumn:
+    j = 0
+    sumCollums = []
+    max = 5
+    while j < max:
+        sumCollums.append(take_index_metrics(list_executions, j, False))
+        j = j + 1
+
+    i = 0
+    result = []
+    for eachCollum in sumCollums:
+        #eachCollum = take_index_metrics(list_executions, 1, False)
+
+        #testClassification(mix, print_flag, plot_flag):
+        eachCollumn_result = testClassification(eachCollum, 0, 0)
+        data = do_histogram(eachCollumn_result, False)
+        test_plot(data, 1, i, False)
+        result.append(eachCollumn_result)
+        if (print_flag):
+            print 'result'
+            print eachCollumn_result
+
+
+
+"Main function"
 def main():
     #testCSV()
-    createRuns(True)
-    
+    createExecutions(True)
+
+"calling main"
 if __name__ == '__main__':
     main()
