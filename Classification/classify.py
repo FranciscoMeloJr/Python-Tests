@@ -26,6 +26,84 @@ import os
 
 from printdebug import debug
 
+#Class used for classification:
+class Run(object):
+    """A simple example class"""
+    id = -1
+    metrics = -1
+    info = []
+    classification = []
+
+    def __init__(self, list):
+        self.metrics = list
+
+    def __init__(self, id, list):
+        self.id = id
+        self.metrics = list
+
+    def show(self):
+        print (self.metrics)
+        return
+
+    def get_metrics_1(self):
+        return self.metrics[0]
+
+    def get_metrics_index(self, index):
+        return int(self.metrics[index])
+
+    def print_metrics(self):
+        print self.metrics
+
+
+    def __init__(self, init_value):
+        self.info = init_value
+
+    def set_classification(self, data):
+        self.classification = data
+
+    def print_(self):
+        print
+        self.info
+        print
+        self.classification
+
+    def __str__(self):
+        str1 = ''.join(self.info)
+        return str1
+
+    def get_info(self):
+        return self.info
+
+    def get_classification(self):
+        return self.classification
+
+# # Class used for the tests:
+# class Run(object):
+#     info = []
+#     classification = []
+#
+#     def __init__(self, init_value):
+#         self.info = init_value
+#
+#     def set_classification(self, data):
+#         self.classification = data
+#
+#     def print_(self):
+#         print
+#         self.info
+#         print
+#         self.classification
+#
+#     def __str__(self):
+#         str1 = ''.join(self.info)
+#         return str1
+#
+#     def get_info(self):
+#         return self.info
+#
+#     def get_classification(self):
+#         return self.classification
+
 class Gauss(object):
     def __init__(self, mean=0, stddev=1):
         self.mean = mean
@@ -317,31 +395,6 @@ class Classification(object):
         list_a[index] = aux
             
         return list_a
-    
-#Class used for the tests:
-class Run(object):
-    info = []
-    classification = []
-    
-    def __init__(self, init_value):
-        self.info = init_value
-
-    def set_classification(self, data):
-        self.classification = data
-        
-    def print_(self):
-        print self.info
-        print self.classification
-        
-    def __str__(self):
-        str1 = ''.join(self.info)
-        return str1
-
-    def get_info(self):
-        return self.info
-
-    def get_classification(self):
-        return self.classification
     
 def test():
     #simulation()
@@ -635,6 +688,23 @@ def csv_read(position):
                 
     return temp
 
+def csv_read_full(path):
+    import csv
+    # position = 0
+    temp = []
+    script_dir = os.path.dirname(__file__)
+    rel_path = path #= 'src/troubleSample.csv'
+    rel_path = path #= 'src/troubleSample.csv'
+    abs_file_path = os.path.join(script_dir, rel_path)
+    with open(abs_file_path) as csvfile:
+        readCSV = csv.reader(csvfile, delimiter=',')
+        for row in readCSV:
+            temp.append(row)
+            #if (len(row) > position):
+            #    temp.append(int(row[position]))
+
+    return temp
+
 def testEachCSVCollumn(col, test, print_flag, plot_flag):
     #classification for first collumn
     read_group1 = csv_read(col)
@@ -758,74 +828,34 @@ def testCSV():
 
     #show the classification:
     create_runs(result, classification_result, 1)
-    
-def createRuns(print_flag, plot_flag):
+
+"This function will create the runs (the classe defined above)"
+def create_list_Runs_object(list_metrics):
+    list_objects = []
+    for each in list_metrics:
+        x = Run(each)
+        list_objects.append(x)
+
+    return list_objects
+
+"This function will print each run"
+def printRuns(list_runs):
+    for each in list_runs:
+        print each
+
+"This function will create the runs from the csv file"
+def createRuns(print_flag):
     i =0
     temp = []
     max = 5
-    while i < max: 
-        temp.append(csv_read(i))
-        i+=1
+    temp = csv_read_full("testsFiles/troubleSample.csv")
+    list_runs = create_list_Runs_object(temp)
 
-    
-    j = 0
-    totalRuns = []
-    total = 50
-    while j < total:
-        runs = []
-        i = 0
-        while i < 5:
-            runs.append(temp[i][j])
-            i+=1
-        totalRuns.append(runs)
-        j+=1
+    printRuns(list_runs)
 
-    list_runs = []
-        
-    for each in totalRuns:
-        if(print_flag > 0):
-            print each
-        eachRun = Run(each)
-        list_runs.append(eachRun)
+    print temp
 
-    
-    sumCollums = []
-    i = 0
-    while i < max:
-        temp = []
-        for each in list_runs:
-            eachInfo = each.get_info()
-            temp.append(eachInfo[i])
-        sumCollums.append(temp)
-        i+=1
-
-    result = []
-    i = 0
-    for eachCollum in sumCollums:
-        print eachCollum
-        eachCollumn_result = testClassification(eachCollum, 0 , 0)
-        data = do_histogram(eachCollumn_result, 1)
-        test_plot(data, 1, i)
-        i+=1
-        result.append(eachCollumn_result)
-        if(print_flag > 0):
-            print 'result' 
-            print eachCollumn_result
-
-    for each in list_runs:
-        eachInfo = each.get_info()
-        i = 0
-        temp = []
-        while i < max:
-            temp.append(find_group(result[i], eachInfo[i], 0))
-            i+=1
-        if(print_flag > 0):
-            print temp
-        each.set_classification(temp)
-
-    analysis(list_runs)
-        
-    return list_runs
+    #return list_runs
 
 #This function analysis the classification within the runs:
 def analysis(list_runs):
@@ -887,39 +917,51 @@ def calculate_correlation(specific, list_runs, index):
 
 #this function finds the types of a distribution:
 def similarities(index, specific, result):
-    print 'similarities'
+    print 'relations'
     sim = []
     position = 0
     po_0 = []
+    sum_po_0 = []
     po_1 = []
     po_2 = []
-    po_3 = [] 
+    po_3 = []
+    po_4 = []
+    dict = {}
     for each in result:
         for position in range(len(each)):
             if(position is not index):
                 if(position is 0):
-                    if(each[position] not in po_0):
-                        po_0.append(each[position])
+                    #if(each[position] not in po_0):
+                    po_0.append(each[position])
                         
                 if(position is 1):
-                    if(each[position] not in po_1):
-                        po_1.append(each[position])
+                    #if(each[position] not in po_1):
+                    po_1.append(each[position])
                 if(position is 2):
-                    if(each[position] not in po_2):
-                        po_2.append(each[position])
+                    #if(each[position] not in po_2):
+                    po_2.append(each[position])
                     
                 if(position is 3):
-                    if(each[position] not in po_3):
-                        po_3.append(each[position])
-                            
+                    #if(each[position] not in po_3):
+                    po_3.append(each[position])
+                        
+                if(position is 4):
+                    #if(each[position] not in po_4):
+                    po_4.append(each[position]) 
+        
     sim.append(po_0)
     sim.append(po_1)
     sim.append(po_2)
     sim.append(po_3)
+    sim.append(po_4)
     if not sim:
         print("List is empty")
     else:
         print sim
+
+    x = 10
+    print "Porcentagem de relacao " + str(x)
+    
     
     
 #this function finds the types of a distribution:
@@ -983,7 +1025,7 @@ def do_histogram(data, print_flag):
 #Main function to test all:
 def main():
     #testCSV()
-    createRuns(1, 1)
+    createRuns(True)
     
 if __name__ == '__main__':
     main()
