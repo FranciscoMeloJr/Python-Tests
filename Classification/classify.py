@@ -784,7 +784,48 @@ def testCSV():
 
     #return list_runs
 
-#This function analysis the classification within the runs:
+
+"This function analysis the classify the executions"
+def analysis_executions(list_runs):
+    print
+    "Analysis"
+    temp = []
+    types = []
+    types_list = []
+    result = []
+    j = 0
+    z
+    max = 5
+    while j < max:
+        for each in list_runs:
+            info = each.get_classification()
+            temp.append(info[j])
+
+        types.append(temp[0])
+
+        for i in range(len(temp)):
+            if (temp[i] not in types):
+                types.append(temp[i])
+
+        result = find_types(types)
+        types_list.append(result)
+        j += 1
+
+    # [[1, 0], [1, 0, 2], [1, 0, 2], [1, 0, 2], [1, 0, 2]]
+    print
+    types_list
+
+    i = 0
+    list_info = []
+    for each in types_list:
+        print
+        each
+        for j in range(len(each)):
+            calculate_correlation(each[j], list_runs, i)
+        i += 1
+
+    return 0
+"This function analysis the classification within the runs:"
 def analysis(list_runs):
     print "Analysis"
     temp = []
@@ -966,6 +1007,11 @@ def create_list_Executions_object(list_metrics, flag):
 
     return list_objects
 
+"This function prints the classification for each execution"
+def printClassification(list_executions):
+    for each in list_executions:
+        print each.get_classification()
+
 "This function will take a specific metric from a list of runs Objects"
 def take_index_metrics(list_executions, index, flag):
     print index
@@ -983,6 +1029,34 @@ def printExecutions(list_runs):
     for each in list_runs:
         each.show()
 
+"This function finds a position of a value in a list of lists"
+def find_position(value, list_values):
+    i = 0
+    for eachList in list_values:
+        for each in eachList:
+            if (int(each) == value):
+                return i
+        i = i + 1
+    #not found:
+    return -1
+
+"This function will take put the classification for each group, and put the result in the position"
+def do_classification(list_executions, eachCollumn_result, metric_position):
+    print metric_position
+    i = 0
+    groups = eachCollumn_result
+    # for each in groups:
+    #     print i
+    #     i = i + 1
+
+    for each in list_executions:
+        metric_value = int(each.get_index_metrics(metric_position))
+        classification = each.get_classification()
+        print metric_value
+        result = find_position(metric_value, groups)
+        classification[metric_position] = result
+        each.set_classification(classification)
+
 "This function will create the runs from the csv file Josias"
 def createExecutions(print_flag):
     temp_data = csv_read_full("testsFiles/troubleSample.csv")
@@ -998,23 +1072,29 @@ def createExecutions(print_flag):
     sumCollums = []
     max = 5
     while j < max:
-        sumCollums.append(take_index_metrics(list_executions, j, False))
-        j = j + 1
-
-    i = 0
-    result = []
-    for eachCollum in sumCollums:
-        #eachCollum = take_index_metrics(list_executions, 1, False)
+    #     sumCollums.append(take_index_metrics(list_executions, j, False))
+    #     j = j + 1
+    #
+    # i = 0
+        result = []
+    # for eachCollum in sumCollums:
+        eachCollum = take_index_metrics(list_executions, j, False)
 
         #testClassification(mix, print_flag, plot_flag):
         eachCollumn_result = testClassification(eachCollum, 0, 0)
         data = do_histogram(eachCollumn_result, False)
-        test_plot(data, 1, i, False)
+        test_plot(data, 1, j, False)
         result.append(eachCollumn_result)
         if (print_flag):
             print 'result'
             print eachCollumn_result
 
+        #do the classification
+        do_classification(list_executions, eachCollumn_result, j)
+        #show the classification
+        printClassification(list_executions)
+        raw_input("Press Enter to continue...")
+        j = j + 1
 
 
 "Main function"

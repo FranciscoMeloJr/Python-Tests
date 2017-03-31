@@ -5,7 +5,7 @@ class Execution(object):
     id = -1
     metrics = -1
     info = []
-    classification = []
+    classification = [0,0,0,0,0,0]
 
     def __init__(self, list):
         self.metrics = list
@@ -13,6 +13,7 @@ class Execution(object):
     def __init__(self, id, list):
         self.id = id
         self.metrics = list
+        self.classification = [0, 0, 0, 0, 0, 0]
         print self.metrics
 
     def show(self):
@@ -37,6 +38,12 @@ class Execution(object):
     def __str__(self):
         str1 = ''.join(self.info)
         return str1
+
+    def get_metrics(self):
+        return self.metrics
+
+    def get_id(self):
+        return self.id
 
     def get_info(self):
         return self.info
