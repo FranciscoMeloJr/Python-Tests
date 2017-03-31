@@ -27,6 +27,7 @@ import os
 from printdebug import debug
 
 from execution import Execution
+from csv_module import *
 
 
 # # Class used for the tests:
@@ -624,39 +625,6 @@ def test4():
     result = classifier.kmeans(1, len(test), test)
     print result
 
-def csv_read(position):
-    import csv
-    #position = 0 
-    temp = []
-    script_dir = os.path.dirname(__file__)
-    rel_path = "testsFiles/troubleSample.csv"
-    #path = 'src/troubleSample.csv'
-    abs_file_path = os.path.join(script_dir, rel_path)
-    with open(abs_file_path) as csvfile:
-        readCSV = csv.reader(csvfile, delimiter=',')
-        for row in readCSV:
-            if(len(row) > position):
-                temp.append(int(row[position]))
-                
-    return temp
-
-def csv_read_full(path):
-    import csv
-    # position = 0
-    temp = []
-    script_dir = os.path.dirname(__file__)
-    rel_path = path #= 'src/troubleSample.csv'
-    rel_path = path #= 'src/troubleSample.csv'
-    abs_file_path = os.path.join(script_dir, rel_path)
-    with open(abs_file_path) as csvfile:
-        readCSV = csv.reader(csvfile, delimiter=',')
-        for row in readCSV:
-            temp.append(row)
-            #if (len(row) > position):
-            #    temp.append(int(row[position]))
-
-    return temp
-
 def testEachCSVCollumn(col, test, print_flag, plot_flag):
     #classification for first collumn
     read_group1 = csv_read(col)
@@ -786,45 +754,31 @@ def testCSV():
 
 
 "This function analysis the classify the executions"
-def analysis_executions(list_runs):
-    print
-    "Analysis"
-    temp = []
-    types = []
-    types_list = []
-    result = []
-    j = 0
-    z
-    max = 5
-    while j < max:
-        for each in list_runs:
-            info = each.get_classification()
-            temp.append(info[j])
+def analysis_executions(list_groups, counter):
+    print "Analysis"
 
-        types.append(temp[0])
+    total  = 0
+    percentage = []
+    for eachGroup in list_groups:
+        total+= len(eachGroup)
 
-        for i in range(len(temp)):
-            if (temp[i] not in types):
-                types.append(temp[i])
+    for eachGroup in list_groups:
+        numerator = len(eachGroup)
+        percentage.append(numerator/float (total))
 
-        result = find_types(types)
-        types_list.append(result)
-        j += 1
+    #writes to csv:
+    list_each = []
+    list_write = []
+    gr = 0
+    for each in percentage:
+        list_each = ["metric" + str(counter), each, gr]
+        list_write.append(list_each)
+        gr = gr + 1
 
-    # [[1, 0], [1, 0, 2], [1, 0, 2], [1, 0, 2], [1, 0, 2]]
-    print
-    types_list
+    #list_write = ["metric" + counter,, "group1"], ["metric123", "50", "group2"]
+    csv_write_append("results/egg.csv",list_write , True)
 
-    i = 0
-    list_info = []
-    for each in types_list:
-        print
-        each
-        for j in range(len(each)):
-            calculate_correlation(each[j], list_runs, i)
-        i += 1
-
-    return 0
+    return percentage
 "This function analysis the classification within the runs:"
 def analysis(list_runs):
     print "Analysis"
@@ -1041,7 +995,7 @@ def find_position(value, list_values):
     return -1
 
 "This function will take put the classification for each group, and put the result in the position"
-def do_classification(list_executions, eachCollumn_result, metric_position):
+def do_classification(list_executions, eachCollumn_result, metric_position, flag):
     print metric_position
     i = 0
     groups = eachCollumn_result
@@ -1052,32 +1006,28 @@ def do_classification(list_executions, eachCollumn_result, metric_position):
     for each in list_executions:
         metric_value = int(each.get_index_metrics(metric_position))
         classification = each.get_classification()
-        print metric_value
+        if(flag):
+            print metric_value
         result = find_position(metric_value, groups)
         classification[metric_position] = result
         each.set_classification(classification)
 
 "This function will create the runs from the csv file Josias"
-def createExecutions(print_flag):
-    temp_data = csv_read_full("testsFiles/troubleSample.csv")
+def createExecutions(path, print_flag):
+    temp_data = csv_read_full(path)
     list_executions = create_list_Executions_object(temp_data, False)
 
     #To print the execution
-    printExecutions(list_executions)
+    if(print_flag):
+        printExecutions(list_executions)
 
     #take a metric:
 
     #Classify each collumn:
     j = 0
-    sumCollums = []
     max = 5
     while j < max:
-    #     sumCollums.append(take_index_metrics(list_executions, j, False))
-    #     j = j + 1
-    #
-    # i = 0
         result = []
-    # for eachCollum in sumCollums:
         eachCollum = take_index_metrics(list_executions, j, False)
 
         #testClassification(mix, print_flag, plot_flag):
@@ -1090,9 +1040,14 @@ def createExecutions(print_flag):
             print eachCollumn_result
 
         #do the classification
-        do_classification(list_executions, eachCollumn_result, j)
+        do_classification(list_executions, eachCollumn_result, j, False)
         #show the classification
         printClassification(list_executions)
+
+        #percentage calculation:
+        print(analysis_executions(eachCollumn_result, j))
+
+        #getchar()
         raw_input("Press Enter to continue...")
         j = j + 1
 
@@ -1100,7 +1055,7 @@ def createExecutions(print_flag):
 "Main function"
 def main():
     #testCSV()
-    createExecutions(True)
+    createExecutions("testsFiles/troubleSample.csv", True)
 
 "calling main"
 if __name__ == '__main__':
