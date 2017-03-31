@@ -38,15 +38,13 @@ def csv_read_full(path):
 
 
 "This function writes to a csv file"
-def csv_write_csv(path, content, flag):
-    path = "results/egg.csv"
+def csv_write_csv(path, header, flag):
     if(flag):
         print path
     with open(path, 'wb') as csvfile:
-        csv_out = csv.writer(csvfile, content)
-        csv_out.writerow(['metric', 'percentage', 'group'])  # Write out a header
-        for each in content:
-            csv_out.writerow(each)  # Write out each account as a row
+        csv_out = csv.writer(csvfile, header)
+        for each in header:
+            csv_out.writerow(each)
 
 
 "This function appends to a csv file"
