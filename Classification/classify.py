@@ -27,6 +27,7 @@ import os
 from printdebug import debug
 
 from execution import Execution
+from metric import Metric
 from csv_module import *
 
 
@@ -817,7 +818,7 @@ def analysis(list_runs):
     return 0
 
 
-#this function calculates the correlation of a specific number, in a index, to the classification
+"this function calculates the correlation of a specific number, in a index, to the classification"
 def calculate_correlation(specific, list_runs, index):
     print 'calculate correlation metric:' + str(index)
     print 'group:' + str(specific)
@@ -837,7 +838,7 @@ def calculate_correlation(specific, list_runs, index):
     
     return result
 
-#this function finds the types of a distribution:
+"this function finds the types of a distribution"
 def similarities(index, specific, result):
     print 'relations'
     sim = []
@@ -1030,7 +1031,7 @@ def createExecutions(path, print_flag):
     #Classify each collumn:
     j = 0
     max = 5
-    createHeader("results/egg.csv", False)
+    createHeader("results/classification.csv", False)
     while j < max:
         result = []
         eachCollum = take_index_metrics(list_executions, j, False)
