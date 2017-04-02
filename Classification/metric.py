@@ -73,9 +73,10 @@ class Metric(object):
         self.groups = groups
 
     def show(self):
+        print self.name
         print self.groups
 
-    def qtd_groups(self):
+    def get_qtd_groups(self):
         return len(self.groups)
 
     def set_list_execution(self, list):
@@ -83,6 +84,16 @@ class Metric(object):
 
     def get_executions_groups(self):
         return self.list_executions
+
+    "This function returns all the executions from a group"
+    def get_all_executions_by_group_index(self, index):
+
+        result = []
+        for each in self.list_executions:
+            if (each[2]== index):
+                result.append(each[0])
+
+        return result
 
     "This function to creates the groups inside the metric"
     def create_groups(self, list_values):
@@ -103,7 +114,7 @@ class Metric(object):
         self.groups = list_groups
 
     "Creates a metric from an execution list"
-    def create_from_execution_list(self, list_executions, index):
+    def create_from_execution_list(self, list_executions, index, flag):
         values = []
         matrix = []
         temp = []
@@ -116,14 +127,15 @@ class Metric(object):
 
         self.create_groups(values)
 
-        print matrix
+        if(flag):
+            print matrix
 
         temp = []
         result_matrix = []
         for each in matrix:
             group = self.give_value_I_will_find_group(each[0])#value
             each[1]#id
-            temp = [each[1], each[0], group]
+            temp = [each[1], each[0], group] #[id, value, group]
             result_matrix.append(temp)
 
         self.list_executions = result_matrix
@@ -139,7 +151,7 @@ class Metric(object):
             i = i + 1
         return -1
 
-"This function to create a test to create executions"
+"This function to create a test to create executions and metrics"
 def test_create_executions():
     list_executions = create_list_Executions(10)
 
@@ -171,20 +183,48 @@ def test_create_executions():
 
     return [x,z]
 
+
+"Cross validation"
+def cross(list_metrics):
+
+    temp = []
+    i = 0
+    total = []
+    for each in list_metrics:
+        qtd = each.get_qtd_groups()
+        list_ids = each.get_all_executions_by_group_index(i)
+        total.append(list_ids)
+
+    print set(total[0]).intersection(total[1])
+    print set(total[1]).intersection(total[2])
+
+    print "total"
+    print total
+
 "Main function"
 def main():
     list = create_list_Executions(10)
-
+    list_metrics = []
     # Metrics:
-    m1 = Metric("Velocidade", [1,1,1,2,2,2,3,3,3,1,1])
+    m1 = Metric("Velocidade")
+    m1.create_from_execution_list(list, 0, False)
+    list_metrics.append(m1)
+    print m1.get_executions_groups()
+
     m2 = Metric("Potencia")
-    m2.create_from_execution_list(list, 2)
+    m2.create_from_execution_list(list, 1, False)
+    list_metrics.append(m2)
     print m2.get_executions_groups()
+
+    m3 = Metric("Camisa")
+    m3.create_from_execution_list(list, 2, False)
+    list_metrics.append(m3)
+    print m3.get_executions_groups()
+
     #m1.create_groups([1,1,1,2,2,2,3,3,3,1,1])
 
 
-    m2.show()
-    print m2.qtd_groups()
+    cross(list_metrics)
     # m2.show()
     # m3.show()
 
