@@ -60,6 +60,8 @@ class Metric(object):
     groups = []
     name = ""
     list_executions = []
+    results = []
+    qtd = 0
 
     def __init__(self, name, groups= [], id = -1):
         self.id = id
@@ -85,11 +87,21 @@ class Metric(object):
     def get_executions_groups(self):
         return self.list_executions
 
+    def get_size(self):
+        return qtd
+
+    "Returns all the results"
+    def get_result(self):
+        return self.results
+
+    def get_groups(self):
+        return self.groups
+
     "This function returns all the executions from a group"
     def get_all_executions_by_group_index(self, index):
 
         result = []
-        for each in self.list_executions:
+        for each in self.results:
             if (each[2]== index):
                 result.append(each[0])
 
@@ -112,6 +124,7 @@ class Metric(object):
             previous = each
         list_groups.append(aux)
         self.groups = list_groups
+        self.qtd = len(list_values)
 
     "Creates a metric from an execution list"
     def create_from_execution_list(self, list_executions, index, flag):
@@ -138,7 +151,17 @@ class Metric(object):
             temp = [each[1], each[0], group] #[id, value, group]
             result_matrix.append(temp)
 
-        self.list_executions = result_matrix
+
+        self.results = result_matrix
+
+        i = 0
+        list_exe_by_group = []
+        while i < len(self.groups):
+            temp = self.get_all_executions_by_group_index(i)
+            i = i + 1
+            list_exe_by_group.append(temp)
+
+        self.list_executions = list_exe_by_group
 
     "This function to find the group of a variable"
     def give_value_I_will_find_group(self, value):
@@ -184,47 +207,78 @@ def test_create_executions():
     return [x,z]
 
 
-"Cross validation"
-def cross(list_metrics):
+"Cross validation p1"
+def take_all_groups(list_metrics):
 
     temp = []
     i = 0
     total = []
     for each in list_metrics:
         qtd = each.get_qtd_groups()
-        list_ids = each.get_all_executions_by_group_index(i)
-        total.append(list_ids)
-
-    print set(total[0]).intersection(total[1])
-    print set(total[1]).intersection(total[2])
+        i = 0
+        while i < qtd:
+            list_ids = each.get_all_executions_by_group_index(i)
+            total.append(list_ids)
+            i = i + 1
 
     print "total"
     print total
+    return total
 
-"Main function"
-def main():
-    list = create_list_Executions(10)
+"Cross validation p2"
+def cross(list_groups, qtd):
+
+    i = 0
+    while i < len(list_groups):
+        b1 = list_groups[i]
+
+        j = 0
+        while j < len(list_groups):
+            b2 = list_groups[j]
+            result = len(set(b1).intersection(b2))
+            result = float(result) / float(qtd)
+            print "b1 " + str(b1) + " b2 " +  str(b2) + " " + str(result)
+            j = j + 1
+
+
+        i = i + 1
+
+"This function creates the metrics from the executions"
+def create_list_metrics(list):
     list_metrics = []
-    # Metrics:
+
     m1 = Metric("Velocidade")
     m1.create_from_execution_list(list, 0, False)
     list_metrics.append(m1)
+    print "Velocidade"
     print m1.get_executions_groups()
 
     m2 = Metric("Potencia")
     m2.create_from_execution_list(list, 1, False)
     list_metrics.append(m2)
+    print "Potencia"
+
     print m2.get_executions_groups()
 
     m3 = Metric("Camisa")
     m3.create_from_execution_list(list, 2, False)
     list_metrics.append(m3)
+    print "Camisa"
     print m3.get_executions_groups()
+
+    return list_metrics
+
+"Main function"
+def main():
+    list = create_list_Executions(10)
+    list_metrics = create_list_metrics(list)
 
     #m1.create_groups([1,1,1,2,2,2,3,3,3,1,1])
 
+    print "Cross validation"
+    total = take_all_groups(list_metrics)
+    cross(total, 11)
 
-    cross(list_metrics)
     # m2.show()
     # m3.show()
 
