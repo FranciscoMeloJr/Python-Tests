@@ -174,38 +174,6 @@ class Metric(object):
             i = i + 1
         return -1
 
-"This function to create a test to create executions and metrics"
-def test_create_executions():
-    list_executions = create_list_Executions(10)
-
-    x = Group(27, "Group 0", "Speed")
-    z = Group(28, "Group 1", "Speed")
-
-    print z.get_executions()
-    print x.get_executions()
-
-    group_g1 = []
-    group_g0 = []
-    for each in list_executions:
-        group_choice = each.get_index_metrics(0)
-        g0 = 0
-        g1 = 1
-
-        if (group_choice == g0):
-            print "g0"
-            group_g0.append(each.get_id())
-        if (group_choice == g1):
-            print "g1"
-            group_g1.append(each.get_id())
-    z.add_execution(group_g0)
-    x.add_execution(group_g1)
-
-    # groups:
-    print z.get_executions()
-    print x.get_executions()
-
-    return [x,z]
-
 
 "Cross validation p1"
 def take_all_groups(list_metrics):
@@ -226,22 +194,32 @@ def take_all_groups(list_metrics):
     return total
 
 "Cross validation p2"
-def cross(list_groups, qtd):
-
+def cross(list_groups, qtd, flag):
     i = 0
+    matrix = []
     while i < len(list_groups):
         b1 = list_groups[i]
-
         j = 0
+        temp = []
         while j < len(list_groups):
             b2 = list_groups[j]
             result = len(set(b1).intersection(b2))
             result = float(result) / float(qtd)
-            print "b1 " + str(b1) + " b2 " +  str(b2) + " " + str(result)
+            if(flag):
+                print "b1 " + str(b1) + " b2 " +  str(b2) + " " + str(result)
+            temp.append(result)
             j = j + 1
-
-
+        matrix.append(temp)
         i = i + 1
+
+    return matrix
+
+"Function to print"
+def print_matrix(matrix):
+    for row in matrix:
+        for collumn in row:
+            print collumn
+        print "\n"
 
 "This function creates the metrics from the executions"
 def create_list_metrics(list):
@@ -273,13 +251,10 @@ def main():
     list = create_list_Executions(10)
     list_metrics = create_list_metrics(list)
 
-    #m1.create_groups([1,1,1,2,2,2,3,3,3,1,1])
 
     print "Cross validation"
     total = take_all_groups(list_metrics)
-    cross(total, 11)
+    print cross(total, 11, False)
 
-    # m2.show()
-    # m3.show()
 
 main()
