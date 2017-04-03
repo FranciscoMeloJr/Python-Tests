@@ -321,8 +321,8 @@ def cross_metrics(list_metrics):
 "Main function"
 def main():
     #list = create_list_Executions(10)
-    list = read_csv_create_executions("testsFiles/executions.csv", False) #("testsFiles/executions.csv", False)
-    list_metrics = create_list_metrics(list, 3, False) #(list, 6)
+    list = read_csv_create_executions("results/classification.csv", False) #("testsFiles/executions.csv", False)
+    list_metrics = create_list_metrics(list, 6, False) #(list, 6)
 
     cross_metrics(list_metrics)
     # m1= list_metrics[0]
