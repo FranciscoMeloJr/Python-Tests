@@ -27,7 +27,6 @@ import os
 from printdebug import debug
 
 from execution import Execution
-from metric import Metric
 from csv_module import *
 
 
@@ -102,7 +101,10 @@ class Classification(object):
             total_difference += list_difference[i]
                 
         #mean:
-        total_difference /= len(list_difference)
+        if(len(list_difference) != 0):
+            total_difference /= len(list_difference)
+        else:
+            total_difference = 0
 
         return total_difference
     
@@ -1029,8 +1031,16 @@ def writeResult(path, list_executions):
 
 "This function will create the runs from the csv file Josias"
 def createExecutions(path, print_flag):
-    temp_data = csv_read_full(path)
-    list_executions = create_list_Executions_object(temp_data, False)
+    temp_data = csv_read_full(path, True)
+    if(len(temp_data) > 0):
+        list_executions = create_list_Executions_object(temp_data, False)
+    else:
+        print "Empty list of executions"
+
+    # getchar()
+    raw_input("Press Enter to continue...")
+
+    print temp_data
 
     #To print the execution
     if(print_flag):
@@ -1061,7 +1071,8 @@ def createExecutions(path, print_flag):
         printClassification(list_executions)
 
         #percentage calculation:
-        print(analysis_executions(eachCollumn_result, j))
+        if(print_flag):
+            print(analysis_executions(eachCollumn_result, j))
 
         #getchar()
         raw_input("Press Enter to continue...")
@@ -1074,7 +1085,7 @@ def createExecutions(path, print_flag):
 "Main function"
 def main():
     #testCSV()
-    createExecutions("testsFiles/troubleSample.csv", True)
+    createExecutions("realTests/string-inline.csv", True)
 
 "calling main"
 if __name__ == '__main__':

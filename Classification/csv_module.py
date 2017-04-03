@@ -21,12 +21,13 @@ def csv_read(position, path):
     return temp
 
 "This function reads the whole csv file to create each execution"
-def csv_read_full(path):
+def csv_read_full(path, ignore_header = False):
     # position = 0
     temp = []
     script_dir = os.path.dirname(__file__)
     rel_path = path  # = 'src/troubleSample.csv'
     abs_file_path = os.path.join(script_dir, rel_path)
+    i = 0
     with open(abs_file_path) as csvfile:
         readCSV = csv.reader(csvfile, delimiter=',')
         for row in readCSV:
@@ -34,6 +35,8 @@ def csv_read_full(path):
             # if (len(row) > position):
             #    temp.append(int(row[position]))
 
+    if (ignore_header):
+        temp = temp[1:]
     return temp
 
 
@@ -66,5 +69,3 @@ def csv_write_list(path, content, flag):
         csv_out = csv.writer(csvfile, content)
         for each in content:
             csv_out.writerow(each)  # Write out each account as a row
-
-#csv_write_list("results/classification.csv", [[0, 0, 0, 0, 0, 0]], True)
