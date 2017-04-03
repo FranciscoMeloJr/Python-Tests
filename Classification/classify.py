@@ -1017,6 +1017,16 @@ def do_classification(list_executions, eachCollumn_result, metric_position, flag
 def createHeader(path, flag):
     csv_write_csv(path, [['metric', 'percentage', 'group']], flag)
 
+
+"This function write the results in a csv file"
+def writeResult(path, list_executions):
+
+    temp = []
+    for each in list_executions:
+        print each.get_classification()
+        temp.append(each.get_classification())
+        csv_write_list(path, temp, True)
+
 "This function will create the runs from the csv file Josias"
 def createExecutions(path, print_flag):
     temp_data = csv_read_full(path)
@@ -1031,7 +1041,7 @@ def createExecutions(path, print_flag):
     #Classify each collumn:
     j = 0
     max = 5
-    createHeader("results/classification.csv", False)
+    createHeader("results/egg.csv", False)
     while j < max:
         result = []
         eachCollum = take_index_metrics(list_executions, j, False)
@@ -1056,6 +1066,9 @@ def createExecutions(path, print_flag):
         #getchar()
         raw_input("Press Enter to continue...")
         j = j + 1
+
+    writeResult("results/classification.csv", list_executions)
+
 
 
 "Main function"

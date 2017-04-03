@@ -1,5 +1,6 @@
 
 from execution import Execution
+from csv_module import *
 
 "This function will create the runs for testing"
 def create_list_Executions(tam):
@@ -206,7 +207,7 @@ def cross(list_groups, qtd, flag):
             result = len(set(b1).intersection(b2))
             result = float(result) / float(qtd)
             if(flag):
-                print "b1 " + str(b1) + " b2 " +  str(b2) + " " + str(result)
+                print "g1 " + str(b1) + " g2 " +  str(b2) + " " + str(result)
             temp.append(result)
             j = j + 1
         matrix.append(temp)
@@ -221,40 +222,57 @@ def print_matrix(matrix):
             print collumn
         print "\n"
 
+"This function creates a metric"
+def create_metric(name, list, index, flag):
+
+    m1 = Metric(name)
+    m1.create_from_execution_list(list, index, flag)
+    print name
+    print m1.get_groups()
+
+    return m1
+
 "This function creates the metrics from the executions"
 def create_list_metrics(list):
     list_metrics = []
 
-    m1 = Metric("Velocidade")
-    m1.create_from_execution_list(list, 0, False)
-    list_metrics.append(m1)
-    print "Velocidade"
-    print m1.get_executions_groups()
+    str_name = "metric"
 
-    m2 = Metric("Potencia")
-    m2.create_from_execution_list(list, 1, False)
-    list_metrics.append(m2)
-    print "Potencia"
-
-    print m2.get_executions_groups()
-
-    m3 = Metric("Camisa")
-    m3.create_from_execution_list(list, 2, False)
-    list_metrics.append(m3)
-    print "Camisa"
-    print m3.get_executions_groups()
+    i = 0
+    max = 3
+    while i < max:
+        m = create_metric(str_name+ str(i), list, i,False)
+        list_metrics.append(m)
+        i = i + 1
 
     return list_metrics
 
+"Function to read csv file"
+def read_csv_create_executions(path, flag):
+    list_executions = csv_read_full(path)
+    if(flag):
+        print list_executions
+
+    list_objects = []
+    i = 0
+    for each in list_executions:
+        x = Execution(i, each)
+        list_objects.append(x)
+        i = i + 1
+
+    return list_objects
+
 "Main function"
 def main():
-    list = create_list_Executions(10)
+    #list = create_list_Executions(10)
+    list = read_csv_create_executions("testsFiles/executions.csv", False)
     list_metrics = create_list_metrics(list)
 
 
     print "Cross validation"
     total = take_all_groups(list_metrics)
-    print cross(total, 11, False)
+    print cross(total, 11, True)
 
 
 main()
+#read_csv_create_executions(False)

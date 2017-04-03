@@ -55,3 +55,16 @@ def csv_write_append(path, content, flag):
         csv_out = csv.writer(csvfile, content)
         for each in content:
             csv_out.writerow(each)  # Write out each account as a row
+
+"This function appends to a csv file [1,2,3,4]"
+def csv_write_list(path, content, flag):
+    if (flag):
+        print
+        path
+
+    with open(path, 'a') as csvfile:
+        csv_out = csv.writer(csvfile, content)
+        for each in content:
+            csv_out.writerow(each)  # Write out each account as a row
+
+csv_write_list("results/classification.csv", [[0, 0, 0, 0, 0, 0]], True)
