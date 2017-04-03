@@ -756,7 +756,7 @@ def testCSV():
     #return list_runs
 
 
-"This function analysis the classify the executions"
+"This function analysis the classification of the executions"
 def analysis_executions(list_groups, counter):
     print "Analysis"
 
@@ -1021,11 +1021,12 @@ def createHeader(path, flag):
 
 
 "This function write the results in a csv file"
-def writeResult(path, list_executions):
+def writeResult(path, list_executions, flag = False):
 
-    temp = []
     for each in list_executions:
-        print each.get_classification()
+        temp = []
+        if(flag):
+            print each.get_classification()
         temp.append(each.get_classification())
         csv_write_list(path, temp, True)
 
@@ -1034,6 +1035,7 @@ def createExecutions(path, print_flag):
     temp_data = csv_read_full(path, True)
     if(len(temp_data) > 0):
         list_executions = create_list_Executions_object(temp_data, False)
+        print len(list_executions)
     else:
         print "Empty list of executions"
 
@@ -1068,7 +1070,8 @@ def createExecutions(path, print_flag):
         #do the classification
         do_classification(list_executions, eachCollumn_result, j, False)
         #show the classification
-        printClassification(list_executions)
+        if(print_flag):
+            printClassification(list_executions)
 
         #percentage calculation:
         if(print_flag):
@@ -1085,7 +1088,7 @@ def createExecutions(path, print_flag):
 "Main function"
 def main():
     #testCSV()
-    createExecutions("realTests/string-inline.csv", True)
+    createExecutions("realTests/string-inline.csv", False)
 
 "calling main"
 if __name__ == '__main__':
