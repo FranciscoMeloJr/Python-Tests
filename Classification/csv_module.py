@@ -67,4 +67,4 @@ def csv_write_list(path, content, flag):
         for each in content:
             csv_out.writerow(each)  # Write out each account as a row
 
-csv_write_list("results/classification.csv", [[0, 0, 0, 0, 0, 0]], True)
+#csv_write_list("results/classification.csv", [[0, 0, 0, 0, 0, 0]], True)
