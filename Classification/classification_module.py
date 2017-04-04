@@ -219,25 +219,11 @@ class Classification(object):
         # return {'b_n_groups': n_groups[maxp1],'b_tolerance': tolerance[maxp1], 'b_sse': calculated_SSE[maxp1]}
         return maxp1
 
-    """ This is the KDE method classification: """
-
-    def KDE(self, data):
-        print
-        'KDE'
-        while i < len(tag):
-            print
-            tag[i]
-            i += 1
 
     """ This is the opt_kmeans, which takes the k_means and apply: """
-
     def Opk_means(self, data):
         elbow = []
         elbow.append(k_means(data, k))
-
-    def k_means(self, data, k):
-        print
-        k
 
     def print_groups(self, data):
         i = 0
@@ -412,6 +398,7 @@ def testClassification(mix, print_flag, plot_flag):
 
     return result_groups
 
+
 "Test for classification"
 def test():
     # simulation()
@@ -444,19 +431,15 @@ def test():
         total_tolerance.append(i)
 
         table.append(hash_tolerance_SSE)
-    print
-    table
+    print table
 
-    print
-    classificator.best_k({'n_groups': total_groups, 'sse': total_sse, 'tolerance': total_tolerance})
+    print classificator.best_k({'n_groups': total_groups, 'sse': total_sse, 'tolerance': total_tolerance})
 
     fig = plt.figure()
     plot(total_tolerance, total_sse, "SSE", "Tolerance")
     plot(total_tolerance, total_groups, "N Groups", "Tolerance")
 
 "Test 2"
-
-
 def test2():
     print
     "Test 2"
@@ -593,6 +576,31 @@ def test4():
     result = classifier.kmeans(1, len(test), test)
     print result
 
+
+"Function to test CSV"
+def testCSV():
+    # normal_distribution()
+    test = []
+    groups_classification = []
+
+    # Classify:
+    groups_classification.append(testEachCSVCollumn(0, test, 0, 0))
+    groups_classification.append(testEachCSVCollumn(1, test, 0, 0))
+    groups_classification.append(testEachCSVCollumn(2, test, 0, 0))
+    groups_classification.append(testEachCSVCollumn(3, test, 0, 0))
+    groups_classification.append(testEachCSVCollumn(4, test, 0, 0))
+
+    # Connect with run:
+    result = connect(test, 0)
+
+    # [[[1, 2, 4, 5, 6], [3, 4, 5, 6]], [[0, 2, 4, 5, 6], [3, 3, 5, 8]]]
+    classification_result = classify_each_run(result, groups_classification, 0)
+
+    # show the classification:
+    create_runs(result, classification_result, 1)
+
+
+    # return list_runs
 "Main function"
 def main():
     test3()

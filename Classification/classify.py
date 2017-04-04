@@ -57,44 +57,8 @@ from classification_module import *
 #     def get_classification(self):
 #         return self.classification
 
-    
-def test():
-    #simulation()
-    ok = Gauss(200, 50).gen_samples(1000, 0)
-    classificator = Classification()
-    i = 0
 
-    table = []
-    total_groups = []
-    total_sse = []
-    total_tolerance = []
-    print_value = 0
-    while i < 3.0:
-        if(print_value > 0):
-            print "Classification"
-        result_groups =  classificator.variation_classifier(ok, i, print_value)
-        #print result_groups
-        result_sse = classificator.calculate_SSE(result_groups, len(result_groups), print_value)
-        print result_sse
-        i+=0.1
-        hash_tolerance_SSE = []
-        hash_tolerance_SSE.append(i)
-        hash_tolerance_SSE.append(len(result_groups))
-        hash_tolerance_SSE.append(result_sse)
-
-        total_groups.append(len(result_groups))
-        total_sse.append(result_sse)
-        total_tolerance.append(i)
-        
-        table.append(hash_tolerance_SSE)
-    print table
-    
-    print classificator.best_k({'n_groups': total_groups, 'sse': total_sse, 'tolerance': total_tolerance})
-    
-    fig = plt.figure()
-    plot(total_tolerance,total_sse, "SSE", "Tolerance")
-    plot(total_tolerance,total_groups, "N Groups", "Tolerance")
-
+"This function merges everything to put in a dictionary"
 def merge(data, result):
     print "Result"
     #sample        group
@@ -139,16 +103,18 @@ def testClassification(mix, print_flag, plot_flag):
     total_groups = []
     total_sse = []
     total_tolerance = []
-    
-    while i < 20:
+
+    passo = 5
+    while i < 200:
         if(print_flag > 0):
             print "Classification"
             print mix
+        #(self, data, tolerance, print_flag, kind):
         result_groups =  classificator.variation_classifier(mix, i, print_flag, 0)
         #print result_groups
         result_sse = classificator.calculate_SSE(result_groups, len(result_groups), print_flag)
         #print result_sse
-        i+= 1
+        i+= passo
         hash_tolerance_SSE = []
         hash_tolerance_SSE.append(i)
         hash_tolerance_SSE.append(len(result_groups))
@@ -183,7 +149,7 @@ def testClassification(mix, print_flag, plot_flag):
 
     return result_groups
 
-    
+"Creating a normal distribution"
 def normal_distribution():
     ok = Gauss(200, 50).gen_samples(100, 0)
     bad = Gauss(500, 50).gen_samples(100, 1)
@@ -207,7 +173,7 @@ def normal_distribution():
     
     return ok
 
-#Plot:
+"Plot"
 def plot(x, y, labely, labelx):
     #plt.plot([1,2,3,4])
     
@@ -218,19 +184,8 @@ def plot(x, y, labely, labelx):
     
     return plt
 
-def testEachCSVCollumn(col, test, print_flag, plot_flag):
-    #classification for first collumn
-    read_group1 = csv_read(col)
-    print read_group1
-    test.append(read_group1)
-    
-    result = testClassification(read_group1, 0 , 0)
 
-    if(print_flag > 0):
-        print result
-    return result
-
-#This function finds the classification 
+"This function finds the classification"
 def find_group(test, number, print_flag):
     "Find group"
     j = 0
@@ -246,7 +201,7 @@ def find_group(test, number, print_flag):
         j+=1
     return -1
 
-#This function connects for each run and the values of each metric:
+"This function connects for each run and the values of each metric"
 def connect(test, print_flag):
     "Connect"
     totalRun = []
@@ -264,7 +219,7 @@ def connect(test, print_flag):
 
     return totalRun
 
-#This function classify each run:
+"This function classify each run"
 # Data: [[2, 3, 1, 1088], [2, 3, 1, 1088], [2, 3, 1, 1089]
 # Result: [[2, 2, 2, 2], [2,3,4,5]]
 def classify_each_run(data, result_classification, print_flag):
@@ -296,55 +251,6 @@ def classify_each_run(data, result_classification, print_flag):
             allResults.append(temp) #[[1,1,1,0],[1,1,1,0]]
             
     return allResults
-        
-#This function creates the runs for testing and returns as list
-def create_runs(data, results, print_flag):
-    print "Create runs. Data:"
-    list_runs = []
-        
-    for each in data:
-        if(print_flag > 0):
-            print each
-        eachRun = Run(each)
-        list_runs.append(eachRun)
-
-    i = 0
-    for i in range(len(list_runs)):     
-        each = list_runs[i]
-        each.set_classification(results[i])
-
-    
-    if(print_flag > 0):
-        print "Classification"
-        for each in list_runs:
-            print each.get_classification()
-        
-    return list_runs
-
-def testCSV():
-    #normal_distribution()
-    test = []
-    groups_classification = []
-    
-    #Classify:
-    groups_classification.append(testEachCSVCollumn(0, test, 0, 0))
-    groups_classification.append(testEachCSVCollumn(1, test, 0, 0))
-    groups_classification.append(testEachCSVCollumn(2, test, 0, 0))
-    groups_classification.append(testEachCSVCollumn(3, test, 0, 0))
-    groups_classification.append(testEachCSVCollumn(4, test, 0, 0))
-    
-    #Connect with run:    
-    result = connect(test, 0)
-    
-    #[[[1, 2, 4, 5, 6], [3, 4, 5, 6]], [[0, 2, 4, 5, 6], [3, 3, 5, 8]]]
-    classification_result = classify_each_run(result, groups_classification, 0)
-
-    #show the classification:
-    create_runs(result, classification_result, 1)
-
-
-    #return list_runs
-
 
 "This function analysis the classification of the executions"
 def analysis_executions(list_groups, counter):
