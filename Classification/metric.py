@@ -1,4 +1,5 @@
-
+#!/usr/bin/python
+import sys
 from execution import Execution
 from csv_module import *
 
@@ -319,10 +320,10 @@ def cross_metrics(list_metrics):
         i = i + 1
 
 "Main function"
-def main():
+def main(path = "results/classification.csv"):
     #list = create_list_Executions(10)
-    list = read_csv_create_executions("results/classification.csv", False) #("testsFiles/executions.csv", False)
-    list_metrics = create_list_metrics(list, 6, False) #(list, 6)
+    list = read_csv_create_executions(path, False) #("testsFiles/executions.csv", False)
+    list_metrics = create_list_metrics(list, 3, False) #(list, 6)
 
     cross_metrics(list_metrics)
     # m1= list_metrics[0]
@@ -335,5 +336,9 @@ def main():
     #print cross(total, 11, True)
 
 
-main()
 #read_csv_create_executions(False)
+if(len(sys.argv)> 1 ):
+    print sys.argv[1]
+    main(sys.argv[1])
+else:
+    main()

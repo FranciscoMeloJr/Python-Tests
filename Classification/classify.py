@@ -1,4 +1,5 @@
-#!/usr/bin/python3
+#!/usr/bin/python
+import sys
 '''
 Created on Nov 1, 2016
 
@@ -580,12 +581,18 @@ def createExecutions(path, print_flag):
     writeResult("results/classification.csv", list_executions)
 
 
-
 "Main function"
-def main():
+def main(path = "realTests/string-inline.csv"):
     #testCSV()
-    createExecutions("realTests/string-inline.csv", False)
+    createExecutions("testsFiles/executions.csv", False)
 
-"calling main"
-if __name__ == '__main__':
+# "calling main"
+# if __name__ == '__main__':
+#     main()
+
+
+if(len(sys.argv)> 1 ):
+    print sys.argv[1]
+    main(sys.argv[1])
+else:
     main()

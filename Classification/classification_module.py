@@ -44,8 +44,12 @@ class Classification(object):
         print
         'Constructor'
 
-    """ This function calculates the difference of a number in a list:"""
+    "Range classifier"
+    def range_classifier(self, data, range):
+        data  / range
+        
 
+    """ This function calculates the difference of a number in a list:"""
     def calculate_difference(self, data, flag_print, kind):
         # print 'calculate difference'
         result = []
