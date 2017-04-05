@@ -92,63 +92,17 @@ def merge(data, result):
     return ({'samples': list_data, 'tag': list_tag, 'guess': list_guess})
 
 
-"This function will do the automated classification"
-def testClassification(mix, print_flag, plot_flag):
-    print "Test Classification"
-    #mix = pd.concat([ok, bad], ignore_index=True)
-    
-    classificator = Classification()
-    i = 0.1
+"This function will call the automated classification with variance"
+def doClassification_using_variance(mix, print_flag, plot_flag):
+    return testClassification(mix, print_flag, plot_flag)
 
-    table = []
-    total_groups = []
-    total_sse = []
-    total_tolerance = []
+"This function will call the automated classification with ranges"
+def doClassification_using_range(mix, print_flag, plot_flag):
+    return testClassification_range(mix, print_flag, plot_flag)
 
-    passo = 5
-    while i < 200:
-        if(print_flag > 0):
-            print "Classification"
-            print mix
-        #(self, data, tolerance, print_flag, kind):
-        result_groups =  classificator.variation_classifier(mix, i, print_flag, 0)
-        #print result_groups
-        result_sse = classificator.calculate_SSE(result_groups, len(result_groups), print_flag)
-        #print result_sse
-        i+= passo
-        hash_tolerance_SSE = []
-        hash_tolerance_SSE.append(i)
-        hash_tolerance_SSE.append(len(result_groups))
-        hash_tolerance_SSE.append(result_sse)
-
-        total_groups.append(len(result_groups))
-        total_sse.append(result_sse)
-        total_tolerance.append(i)
-        
-        table.append(hash_tolerance_SSE)
-    print table
-    
-    best_k = classificator.best_k({'n_groups': total_groups, 'sse': total_sse, 'tolerance': total_tolerance})
-    print table[best_k]
-
-    print "best tolerance:"
-    print round(table[best_k][0],4)
-    print "best k:"
-    print round(table[best_k][1],4)
-    
-    result_groups =  classificator.variation_classifier(mix, round(table[best_k][0],4), print_flag, 0)
-    if(print_flag > 0):
-        result_splited = classificator.print_groups(result_groups)
-
-    #merge:
-    #print merge(mix, result_splited)
-
-    if(plot_flag > 0):
-        fig = plt.figure()
-        plot(total_tolerance,total_sse, "SSE", "Tolerance")
-        plot(total_tolerance,total_groups, "N Groups", "Tolerance")
-
-    return result_groups
+"This function will call the automated classification with ranges"
+def doClassification_specific_range(mix, print_flag, plot_flag):
+    return testClassification_specific_range(mix, print_flag, plot_flag)
 
 "Creating a normal distribution"
 def normal_distribution():
@@ -549,14 +503,14 @@ def createExecutions(path, print_flag):
 
     #Classify each collumn:
     j = 0
-    max = 5
+    max = 3
     createHeader("results/egg.csv", False)
     while j < max:
         result = []
         eachCollum = take_index_metrics(list_executions, j, False)
 
         #testClassification(mix, print_flag, plot_flag):
-        eachCollumn_result = testClassification(eachCollum, 0, 0)
+        eachCollumn_result = doClassification_using_range(eachCollum, 0, 0)
         data = do_histogram(eachCollumn_result, False)
         test_plot(data, 1, j, False)
         result.append(eachCollumn_result)
@@ -582,9 +536,9 @@ def createExecutions(path, print_flag):
 
 
 "Main function"
-def main(path = "realTests/string-inline.csv"):
+def main(path = "testsFiles/executions.csv"):
     #testCSV()
-    createExecutions("testsFiles/executions.csv", False)
+    createExecutions(path, False)
 
 # "calling main"
 # if __name__ == '__main__':

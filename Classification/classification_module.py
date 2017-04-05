@@ -62,6 +62,8 @@ class Classification(object):
             print max
 
         for each in data:
+            each = float(each
+                         )
             if (j < max):
                 temp.append(each)
                 j+=1
@@ -596,6 +598,161 @@ def test3():
 
     return result_groups
 
+
+"This function will do the automated classification"
+def testClassification(mix, print_flag, plot_flag):
+    print
+    "Test Classification"
+    # mix = pd.concat([ok, bad], ignore_index=True)
+
+    classificator = Classification()
+    i = 0.1
+
+    table = []
+    total_groups = []
+    total_sse = []
+    total_tolerance = []
+
+    passo = 5
+    while i < 200:
+        if (print_flag > 0):
+            print
+            "Classification"
+            print
+            mix
+        # (self, data, tolerance, print_flag, kind):
+        result_groups = classificator.variation_classifier(mix, i, print_flag, 0)
+        # print result_groups
+        result_sse = classificator.calculate_SSE(result_groups, len(result_groups), print_flag)
+        # print result_sse
+        i += passo
+        hash_tolerance_SSE = []
+        hash_tolerance_SSE.append(i)
+        hash_tolerance_SSE.append(len(result_groups))
+        hash_tolerance_SSE.append(result_sse)
+
+        total_groups.append(len(result_groups))
+        total_sse.append(result_sse)
+        total_tolerance.append(i)
+
+        table.append(hash_tolerance_SSE)
+    print
+    table
+
+    best_k = classificator.best_k({'n_groups': total_groups, 'sse': total_sse, 'tolerance': total_tolerance})
+    print
+    table[best_k]
+
+    print
+    "best tolerance:"
+    print
+    round(table[best_k][0], 4)
+    print
+    "best k:"
+    print
+    round(table[best_k][1], 4)
+
+    result_groups = classificator.variation_classifier(mix, round(table[best_k][0], 4), print_flag, 0)
+    if (print_flag > 0):
+        result_splited = classificator.print_groups(result_groups)
+
+    # merge:
+    # print merge(mix, result_splited)
+
+    if (plot_flag > 0):
+        fig = plt.figure()
+        plot(total_tolerance, total_sse, "SSE", "Tolerance")
+        plot(total_tolerance, total_groups, "N Groups", "Tolerance")
+
+    return result_groups
+
+"This function will do the automated classification"
+def testClassification_specific_range(mix, print_flag = 0, plot_flag = 0):
+    print
+    "Test Classification"
+    # mix = pd.concat([ok, bad], ignore_index=True)
+
+    classificator = Classification()
+
+    table = []
+    total_groups = []
+    total_sse = []
+    total_tolerance = []
+
+    # (self, data, tolerance, print_flag, kind):
+    result_groups = classificator.range_classifier(mix, i, print_flag)
+
+
+    return result_groups
+
+"This function will do the automated classification"
+def testClassification_range(mix, print_flag, plot_flag):
+    print
+    "Test Classification"
+    # mix = pd.concat([ok, bad], ignore_index=True)
+
+    classificator = Classification()
+    i = 2
+
+    table = []
+    total_groups = []
+    total_sse = []
+    total_tolerance = []
+
+    passo = 5
+    while i < 100:
+        if (print_flag > 0):
+            print
+            "Classification"
+            print
+            mix
+        # (self, data, tolerance, print_flag, kind):
+        result_groups = classificator.range_classifier(mix, i, print_flag)
+        print "xxxxx"
+        print result_groups
+        # print result_groups
+        result_sse = classificator.calculate_SSE(result_groups, len(result_groups), print_flag)
+        # print result_sse
+        i += passo
+        hash_tolerance_SSE = []
+        hash_tolerance_SSE.append(i)
+        hash_tolerance_SSE.append(len(result_groups))
+        hash_tolerance_SSE.append(result_sse)
+
+        total_groups.append(len(result_groups))
+        total_sse.append(result_sse)
+        total_tolerance.append(i)
+
+        table.append(hash_tolerance_SSE)
+    print
+    table
+
+    best_k = classificator.best_k({'n_groups': total_groups, 'sse': total_sse, 'tolerance': total_tolerance})
+    print
+    table[best_k]
+
+    print
+    "best tolerance:"
+    print
+    round(table[best_k][0], 4)
+    print
+    "best k:"
+    print
+    round(table[best_k][1], 4)
+
+    result_groups = classificator.variation_classifier(mix, round(table[best_k][0], 4), print_flag, 0)
+    if (print_flag > 0):
+        result_splited = classificator.print_groups(result_groups)
+
+    # merge:
+    # print merge(mix, result_splited)
+
+    if (plot_flag > 0):
+        fig = plt.figure()
+        plot(total_tolerance, total_sse, "SSE", "Tolerance")
+        plot(total_tolerance, total_groups, "N Groups", "Tolerance")
+
+    return result_groups
 "Test number 4"
 def test4():
     ok = Gauss(200, 50).gen_samples(1000, 0)
@@ -643,5 +800,3 @@ def testCSV():
 "Main function"
 def main():
     test5()
-
-main()
