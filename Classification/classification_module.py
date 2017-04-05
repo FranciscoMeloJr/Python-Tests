@@ -44,10 +44,36 @@ class Classification(object):
         print
         'Constructor'
 
-    "Range classifier"
-    def range_classifier(self, data, range):
-        data  / range
-        
+    "Range classifier =[[1,2,3,1,2,3]]"
+    def range_classifier(self, data, range, flag = True):
+
+        if(flag):
+            print data
+        data = sorted(data)
+        max = len(data)/range
+
+        if (flag):
+            print data
+
+        temp = []
+        total = []
+        j = 0
+        if (flag):
+            print max
+
+        for each in data:
+            if (j < max):
+                temp.append(each)
+                j+=1
+            else:
+                total.append(temp)
+                temp = []
+                temp.append(each)
+                j = 0
+
+
+        total.append(temp)
+        return total
 
     """ This function calculates the difference of a number in a list:"""
     def calculate_difference(self, data, flag_print, kind):
@@ -580,6 +606,15 @@ def test4():
     result = classifier.kmeans(1, len(test), test)
     print result
 
+"Test number 5"
+def test5():
+    classifier = Classification()
+
+    test = [764395.0, 7152665.0, 1320533900, 192039500, 2.497488500, 3.092473600, 3.691400500, 4.33296400, 4.930149100, 5.529365300]
+    #kmeans(self, n_groups, n_items, numbers):
+    result = classifier.range_classifier(test, 3)
+    print result
+
 
 "Function to test CSV"
 def testCSV():
@@ -607,4 +642,6 @@ def testCSV():
     # return list_runs
 "Main function"
 def main():
-    test3()
+    test5()
+
+main()
