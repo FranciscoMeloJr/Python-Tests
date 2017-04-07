@@ -131,7 +131,35 @@ class Classification(object):
             diff_list.append([diff, i, i-1])
             i +=1
 
-        return diff_list
+        #iterating over the diff_list:
+        max = diff_list[0]
+        i  = 0
+        while i < len(diff_list):
+            each = diff_list[i]
+            if(each[0] > max[0]):
+                max = each
+            i +=1
+
+        print max[2]
+
+        i = 0
+        while i < max[2]:
+            each = data[i]
+            groups.append(each)
+            i+=1
+
+        result.append(groups)
+
+        i = max[1]
+        groups = []
+        while i < len(data):
+            each = data[i]
+            groups.append(each)
+            i += 1
+        result.append(groups)
+
+        print result
+        return result
 
     """ Variation classification: algorithm using tolerance"""
     def variation_classifier(self, data, tolerance, print_flag, kind):
@@ -806,7 +834,6 @@ def test6():
     test = [1001,1000,10,11,12,13]
     #kmeans(self, n_groups, n_items, numbers):
     result = classifier.jnb_classifier(test, 3)
-    print result
 
 "Function to test CSV"
 def testCSV():
