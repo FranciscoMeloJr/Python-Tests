@@ -101,8 +101,8 @@ def doClassification_using_range(mix, print_flag, plot_flag):
     return testClassification_range(mix, print_flag, plot_flag)
 
 "This function will call the automated classification with ranges"
-def doClassification_specific_range(mix, print_flag, plot_flag):
-    return testClassification_specific_range(mix, print_flag, plot_flag)
+def doClassification_specific_range(mix, groups = 3, print_flag = 0 , plot_flag = 0):
+    return testClassification_specific_range(mix, groups, print_flag, plot_flag)
 
 "Creating a normal distribution"
 def normal_distribution():
@@ -510,7 +510,7 @@ def createExecutions(path, print_flag):
         eachCollum = take_index_metrics(list_executions, j, False)
 
         #testClassification(mix, print_flag, plot_flag):
-        eachCollumn_result = doClassification_using_range(eachCollum, 0, 0)
+        eachCollumn_result = doClassification_specific_range(eachCollum, 2, 0, 0)
         data = do_histogram(eachCollumn_result, False)
         test_plot(data, 1, j, False)
         result.append(eachCollumn_result)
@@ -536,7 +536,7 @@ def createExecutions(path, print_flag):
 
 
 "Main function"
-def main(path = "testsFiles/executions.csv"):
+def main(path = "testsFiles/troubleSample.csv"):
     #testCSV()
     createExecutions(path, False)
 

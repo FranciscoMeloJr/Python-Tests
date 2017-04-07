@@ -114,8 +114,26 @@ class Classification(object):
 
         return total_difference
 
-    """ Variation classification: algorithm using tolerance"""
+    """ Jenks Natural Breaks"""
+    def jnb_classifier(self, data, natural_breaks = 2, print_flag = False, plot_flag = False):
+        data = sorted(data)
+        diff_list = []
+        i = 1
+        max_value = data[1] - data[0]
 
+        result = []
+        groups = []
+
+        while i < len(data):
+            each = data[i]
+            previous = data[i-1]
+            diff = each - previous
+            diff_list.append([diff, i, i-1])
+            i +=1
+
+        return diff_list
+
+    """ Variation classification: algorithm using tolerance"""
     def variation_classifier(self, data, tolerance, print_flag, kind):
 
         # mean distance:
@@ -364,6 +382,15 @@ class Classification(object):
         list_a[index] = aux
 
         return list_a
+
+"Test the JNB classification"
+def testClassification_jnb(mix, print_flag, plot_flag):
+
+    classificator = Classification()
+    result_groups = classificator.jnb_classifier(mix, n_b, print_flag, plot_flag)
+
+
+
 
 "Test the classification with several groups"
 def testClassification(mix, print_flag, plot_flag):
@@ -667,9 +694,8 @@ def testClassification(mix, print_flag, plot_flag):
     return result_groups
 
 "This function will do the automated classification"
-def testClassification_specific_range(mix, print_flag = 0, plot_flag = 0):
-    print
-    "Test Classification"
+def testClassification_specific_range(mix, groups, print_flag = 0, plot_flag = 0):
+    print "Test Classification"
     # mix = pd.concat([ok, bad], ignore_index=True)
 
     classificator = Classification()
@@ -680,9 +706,9 @@ def testClassification_specific_range(mix, print_flag = 0, plot_flag = 0):
     total_tolerance = []
 
     # (self, data, tolerance, print_flag, kind):
-    result_groups = classificator.range_classifier(mix, i, print_flag)
+    result_groups = classificator.range_classifier(mix, groups, print_flag)
 
-
+    print result_groups
     return result_groups
 
 "This function will do the automated classification"
@@ -763,7 +789,7 @@ def test4():
     result = classifier.kmeans(1, len(test), test)
     print result
 
-"Test number 5"
+"Test number 5 - this function test the division with specific groups, example: 3 = [][][]"
 def test5():
     classifier = Classification()
 
@@ -772,6 +798,15 @@ def test5():
     result = classifier.range_classifier(test, 3)
     print result
 
+
+"Test number 6 - This function test the JNB"
+def test6():
+    classifier = Classification()
+
+    test = [1001,1000,10,11,12,13]
+    #kmeans(self, n_groups, n_items, numbers):
+    result = classifier.jnb_classifier(test, 3)
+    print result
 
 "Function to test CSV"
 def testCSV():
@@ -799,4 +834,7 @@ def testCSV():
     # return list_runs
 "Main function"
 def main():
-    test5()
+    test6()
+
+
+main()
