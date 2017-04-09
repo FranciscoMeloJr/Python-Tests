@@ -115,7 +115,11 @@ class Classification(object):
         return total_difference
 
     """ Jenks Natural Breaks"""
-    def jnb_classifier(self, data, natural_breaks = 2, print_flag = False, plot_flag = False):
+    def jnb_classifier(self, p_data, natural_breaks = 2, print_flag = False, plot_flag = False):
+        data = []
+        for each in p_data:
+            data.append(int(each))
+
         data = sorted(data)
         print data
         diff_list = []
@@ -124,10 +128,11 @@ class Classification(object):
         diff_list = self.calculate_diff(data)
 
         #iterating over the diff_list:
-        print "diff list " + str(diff_list)
         max = []
         max.append(self.take_max(diff_list))
-        print "max " + str(max)
+        if(print_flag):
+            print "diff list " + str(diff_list)
+            print "max " + str(max)
 
         j = 0
         while j < (natural_breaks - 2 ):
@@ -144,9 +149,8 @@ class Classification(object):
         #
         # print result
 
-
-
-        print "result" + str(result)
+        if(print_flag):
+            print "result" + str(result)
         return result
 
     "This function does the division taking the two borders"
@@ -156,7 +160,6 @@ class Classification(object):
         result = []
         groups = []
         splits = []
-        print "Max" + str(max)
         for eachM in max:
             splits.append(eachM[2])
 
@@ -179,20 +182,6 @@ class Classification(object):
             groups.append(each)
             i += 1
         result.append(groups)
-        # for eachSplit in splits:
-        #     while i <= eachSplit:
-        #         each = data[i]
-        #         groups.append(each)
-        #         i += 1
-        #
-        #     result.append(groups)
-        #
-        #     groups = []
-        #     while i < len(data):
-        #         each = data[i]
-        #         groups.append(each)
-        #         i += 1
-        #     result.append(groups)
 
         return result
     "This function calculates the diff"
@@ -781,9 +770,8 @@ def testClassification(mix, print_flag, plot_flag):
     return result_groups
 
 "This function will do the automated classification"
-def testClassification_specific_range(mix, groups, print_flag = 0, plot_flag = 0):
+def testClassification_specific_range(mix, groups, print_flag = False, plot_flag = False):
     print "Test Classification"
-    # mix = pd.concat([ok, bad], ignore_index=True)
 
     classificator = Classification()
 
@@ -793,7 +781,7 @@ def testClassification_specific_range(mix, groups, print_flag = 0, plot_flag = 0
     total_tolerance = []
 
     # (self, data, tolerance, print_flag, kind):
-    result_groups = classificator.range_classifier(mix, groups, print_flag)
+    result_groups = classificator.jnb_classifier(mix, groups, print_flag, plot_flag)
 
     print result_groups
     return result_groups
@@ -890,10 +878,11 @@ def test5():
 def test6():
     classifier = Classification()
 
-    test = [1000,1001,999,10,11,12,13,14,50,51,52,53]
+    testData = [1000,1001,999,10,11,12,13,14,50,51,52,53]
     #test = [1001,1000,10,11,12,13]
     #kmeans(self, n_groups, n_items, numbers):
-    result = classifier.jnb_classifier(test, 3)
+    result = classifier.jnb_classifier(testData, 3)
+    print result
 
 "Function to test CSV"
 def testCSV():
@@ -924,4 +913,4 @@ def main():
     test6()
 
 
-main()
+# main()

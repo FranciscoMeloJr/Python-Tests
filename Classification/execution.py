@@ -5,7 +5,7 @@ class Execution(object):
     id = -1
     metrics = -1
     info = []
-    classification = [0,0,0,0,0,0]
+    classification = [0,0,0,0,0]
 
     def __init__(self, list):
         self.metrics = list
