@@ -117,49 +117,108 @@ class Classification(object):
     """ Jenks Natural Breaks"""
     def jnb_classifier(self, data, natural_breaks = 2, print_flag = False, plot_flag = False):
         data = sorted(data)
+        print data
         diff_list = []
         i = 1
-        max_value = data[1] - data[0]
 
+        diff_list = self.calculate_diff(data)
+
+        #iterating over the diff_list:
+        print "diff list " + str(diff_list)
+        max = []
+        max.append(self.take_max(diff_list))
+        print "max " + str(max)
+
+        j = 0
+        while j < (natural_breaks - 2 ):
+            diff_list.remove(max[j])
+            max.append(self.take_max(diff_list))
+            j+=1
+
+        result = self.divide_data(max, data)
+
+        # for each in result:
+        #     diff_list = self.calculate_diff(each)
+        #     print "each diff " + str(diff_list)
+        #     print "max" + str(self.take_max(diff_list))
+        #
+        # print result
+
+
+
+        print "result" + str(result)
+        return result
+
+    "This function does the division taking the two borders"
+    def divide_data(self, max, data):
+
+        i = 0
         result = []
         groups = []
+        splits = []
+        print "Max" + str(max)
+        for eachM in max:
+            splits.append(eachM[2])
 
+        splits = sorted(splits)
+
+        i = 0
+        j = 0
+        while j < len(splits):
+            while i <= splits[j]:
+                each = data[i]
+                groups.append(each)
+                i += 1
+
+            result.append(groups)
+            groups = []
+            j +=1
+
+        while i < len(data):
+            each = data[i]
+            groups.append(each)
+            i += 1
+        result.append(groups)
+        # for eachSplit in splits:
+        #     while i <= eachSplit:
+        #         each = data[i]
+        #         groups.append(each)
+        #         i += 1
+        #
+        #     result.append(groups)
+        #
+        #     groups = []
+        #     while i < len(data):
+        #         each = data[i]
+        #         groups.append(each)
+        #         i += 1
+        #     result.append(groups)
+
+        return result
+    "This function calculates the diff"
+    def calculate_diff(self, data):
+        i = 1
+        diff_list = []
         while i < len(data):
             each = data[i]
             previous = data[i-1]
             diff = each - previous
             diff_list.append([diff, i, i-1])
             i +=1
+        return diff_list
 
-        #iterating over the diff_list:
+    "This function takes the maximum value a list inside a tuple (JNB II)"
+    def take_max(self, diff_list):
         max = diff_list[0]
-        i  = 0
+        i = 0
+        # finding the biggest gap:
         while i < len(diff_list):
             each = diff_list[i]
-            if(each[0] > max[0]):
+            if (each[0] > max[0]):
                 max = each
-            i +=1
-
-        print max[2]
-
-        i = 0
-        while i < max[2]:
-            each = data[i]
-            groups.append(each)
-            i+=1
-
-        result.append(groups)
-
-        i = max[1]
-        groups = []
-        while i < len(data):
-            each = data[i]
-            groups.append(each)
             i += 1
-        result.append(groups)
 
-        print result
-        return result
+        return max
 
     """ Variation classification: algorithm using tolerance"""
     def variation_classifier(self, data, tolerance, print_flag, kind):
@@ -831,7 +890,8 @@ def test5():
 def test6():
     classifier = Classification()
 
-    test = [1001,1000,10,11,12,13]
+    test = [1000,1001,999,10,11,12,13,14,50,51,52,53]
+    #test = [1001,1000,10,11,12,13]
     #kmeans(self, n_groups, n_items, numbers):
     result = classifier.jnb_classifier(test, 3)
 
