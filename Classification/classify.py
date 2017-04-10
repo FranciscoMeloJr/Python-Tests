@@ -102,7 +102,7 @@ def doClassification_using_range(data, print_flag, plot_flag):
 
 "This function will call the JNB with specific ranges"
 def doClassification_jnb(data, groups = 3, print_flag = 0 , plot_flag = 0):
-    return testClassification_specific_range(data, groups, print_flag, plot_flag)
+    return testClassification_jnb(data, groups, print_flag, plot_flag)
 
 "Creating a normal distribution"
 def normal_distribution():
@@ -503,7 +503,7 @@ def createExecutions(path, print_flag):
 
     #Classify each collumn:
     j = 0
-    max = 5
+    max = 2
     createHeader("results/egg.csv", False)
     while j < max:
         result = []

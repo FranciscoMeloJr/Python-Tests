@@ -118,7 +118,7 @@ class Classification(object):
     def jnb_classifier(self, p_data, natural_breaks = 2, print_flag = False, plot_flag = False):
         data = []
         for each in p_data:
-            data.append(int(each))
+            data.append(float(each))
 
         data = sorted(data)
         print data
@@ -770,7 +770,7 @@ def testClassification(mix, print_flag, plot_flag):
     return result_groups
 
 "This function will do the automated classification"
-def testClassification_specific_range(mix, groups, print_flag = False, plot_flag = False):
+def testClassification_jnb(mix, groups, print_flag = False, plot_flag = False):
     print "Test Classification"
 
     classificator = Classification()
