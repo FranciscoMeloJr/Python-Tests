@@ -1,3 +1,4 @@
+time,inst,cpu_cycles,cache_misses,page_faults,sched_switches
 1,2,0,0,0,0
 9,2,0,0,0,0
 9,1,0,0,0,0

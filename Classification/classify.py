@@ -503,7 +503,7 @@ def createExecutions(path, print_flag):
 
     #Classify each collumn:
     j = 0
-    max = 2
+    max = 5
     createHeader("results/egg.csv", False)
     while j < max:
         result = []
