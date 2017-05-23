@@ -1,2 +1,5 @@
-test1
-test2
+[04:46:20.190868547] (+2.085780262) francisco-desktop lttng_ust_cyg_profile:func_entry: { cpu_id = 6 }, { vpid = 5655, vtid = 5655, procname = "recursive" }, { addr = 0x400873, call_site = 0x40082A }
+[04:46:20.190868547] (+2.085780262) francisco-desktop lttng_ust_cyg_profile:func_entry: { cpu_id = 6 }, { vpid = 5655, vtid = 5655, procname = "recursive" }, { addr = 0x400873, call_site = 0x40082A }
+[04:46:20.190868547] (+2.085780262) francisco-desktop lttng_ust_cyg_profile:func_exit: { cpu_id = 6 }, { vpid = 5655, vtid = 5655, procname = "recursive" }, { addr = 0x400873, call_site = 0x40082A }
+[04:46:20.190868547] (+2.085780262) francisco-desktop lttng_ust_cyg_profile:func_exit: { cpu_id = 6 }, { vpid = 5655, vtid = 5655, procname = "recursive" }, { addr = 0x400873, call_site = 0x40082A }
+

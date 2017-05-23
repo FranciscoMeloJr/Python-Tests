@@ -15,54 +15,119 @@
 from node import Node
 
 #Reading File
-def reading_file():
+def reading_file(file_name, Flag = False):
     "function_docstring"
-    with open("/home/francisco/Downloads/traceAnalyze/case1/tracing_output.txt", "r") as ins:
+    file_ = "/home/francisco/Downloads/traceAnalyze/case1/tracing_output.txt"
+    with open(file_name, "r") as ins:
         array = []
         for line in ins:
             array.append(line)
 
-    for each in array:
-        print (each)
+    if(Flag):
+        for each in array:
+            print (each)
 
     return array
 
-#Reading File
-def create_tree(data):
+#Creating tree with repetition:
+def create_tree(data, flag= False):
     entry = "lttng_ust_cyg_profile:func_entry"
     exit = "lttng_ust_cyg_profile:func_exit"
 
-    tree = Node(-1, ["root"])
+    tree = Node("root",[])
     pointer = tree
+
+    metric1 = "perf_thread_page_fault"
+    metric2 = "perf_thread_instructions"
+    metric3 = "perf_thread_cache_misses"
 
     for each in data:
         if entry in each:
-            print ("cria no")
             begin = (each.find("addr"))
             begin += 7
-            end = begin + 7
-            print (each[begin:end])
-            aux = Node(-1, ["entry"])
+            end = begin + 8
+            name = (each[begin:end])
+            if (flag):
+                print ("cria no "+ name)
+            if (metric1 in each):
+                print (metric1)
+                begin_m = (each.find(metric1))
+                begin_m = begin_m + 25
+                end_m =  begin_m + 1
+                print (each[begin_m:end_m])
+
+            aux = Node(name, [])
             pointer.add_child(aux)
             aux.set_parent(pointer)
             pointer = aux
 
         if exit in each:
-            print ("fecha no")
+            begin = (each.find("addr"))
+            begin += 7
+            end = begin + 8
+            name = (each[begin:end])
+            if (flag):
+                print ("fecha no" + name)
             pointer = pointer.get_parent()
 
-#Finding patterns
+    return pointer
+
+#Creating tree without repetition:
+def create_cct(data, flag):
+    entry = "lttng_ust_cyg_profile:func_entry"
+    exit = "lttng_ust_cyg_profile:func_exit"
+
+    tree = Node("root",[])
+    pointer = tree
+
+    for each in data:
+        if entry in each:
+            if (flag):
+                print ("cria no")
+            begin = (each.find("addr"))
+            begin += 7
+            end = begin + 7
+            name = (each[begin:end])
+            print (name)
+            print ()
+            if("perf_thread_page_fault" in each):
+                print ("page faults")
+            if(pointer.get_label() == name):
+                if (flag):
+                    print("already there")
+                pointer.increment()
+            else:
+                aux = Node(name, [])
+                pointer.add_child(aux)
+                aux.set_parent(pointer)
+                pointer = aux
+
+        if exit in each:
+            if(flag):
+                print ("fecha no")
+            pointer = pointer.get_parent()
+
+    return tree
+
+#inorder traversal:
+def get_data(tree):
+    list = tree.get_children()
+    print (tree.get_label())
+
+    i = 0
+    while i < len(list):
+        get_data(list[i])
+        i = i + 1
+    # for each in range(tree.get_children()):
+    #   print(each.get_label())
+    #   get_data(each.get_children())
+
+
+  #Finding patterns
 def finding_string(data, string):
     i = 0
-    for each in data:
+    for each in range(data):
         i = i + 1
         if string in each:
             print (i)
 
-
-
-
-data = reading_file()
-# finding_string(data, "lttng_ust_cyg_profile:func_entry")
-# finding_string(data, "lttng_ust_cyg_profile:func_exit")
-create_tree(data)
