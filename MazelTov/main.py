@@ -6,10 +6,10 @@ from analysis import *
 "Experiment"
 def main():
     #read the file
-    data = reading_file("/home/francisco/Downloads/traceAnalyze/case1/output_tracing.txt")
+    data = reading_file("/home/francisco/Downloads/traceAnalyze/case3/tiny-AES128-C/output_tracing.txt")
 
     #create the tree
-    tree = create_tree(data, True)
+    tree = create_tree(data, False)
 
     #create the analysis
     ana = Analysis(tree)
