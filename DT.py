@@ -78,11 +78,23 @@ def compare_lists(list_1, list_2):
 
     return float(float(percentage_compare)/len(list_1)*100)
 
+"Rank the metrics"
+def compare_rank():
+    rank1 = 1
+    rank2 = 2
+    rank3 = 3
+
+    return ["metric1", "metric2", "metric3"]
 
 "Experiment"
 def main():
     list_exe = create_executions()
     list_metric0= get_list_metrics(list_exe, 0)
+    print("metric1")
     print(compare_lists([0,0,0,1,1],[1,1,1,1,1]))
+    print("metric2")
+    print(compare_lists([1,1,1,1,1],[1,1,1,1,1]))
+    print("metric3")
+    print(compare_lists([1,1,0,1,1],[1,1,1,1,1]))
 
 main()

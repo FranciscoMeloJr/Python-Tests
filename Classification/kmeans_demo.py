@@ -3,6 +3,8 @@ Requires : python 2.7.x, Numpy 1.7.1+, Matplotlib, 1.2.1+'''
 import sys
 import pylab as plt
 import numpy as np
+from pylab import *
+
 plt.ion()
 
 def show(X, C, centroids, keep = False):
