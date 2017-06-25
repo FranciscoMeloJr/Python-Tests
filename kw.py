@@ -1,7 +1,19 @@
 #!/usr/bin/python
 from scipy import stats
 from scipy.stats import chi2
-            
+import csv
+
+#reading the csv file:
+def read_csv(file_name):
+    temp_total = []
+    temp = []
+    with open(file_name, 'rb') as csvfile:
+        reader = csv.reader(csvfile)
+        for row in reader:
+            temp_total.append(row)
+        
+    return temp_total
+
 def test():
     x = [1, 1, 1]
     y = [2, 2, 2]
@@ -115,6 +127,19 @@ def calculate_sum_sq(list_sum, n, flag):
     print ret
     return ret
 
+#calculate the total:
+def convert(list_x):
+    temp_total = []
+    
+    for each in list_x:
+        temp = []
+        for each_item in each:
+            temp.append(float(each_item))
+        temp_total.append(temp)
+        
+    return temp_total
+    
+
 #count the repetitions:
 def calculate_h(n, size, list_sum, flag):
 
@@ -133,7 +158,11 @@ def calculate_h(n, size, list_sum, flag):
 #count the repetitions:
 def count_repetitions():
     print "oi"
-    
-test_list = [[8.2,10.3,9.1,12.6,11.4,13.2],[10.2,9.1,13.9,14.5,9.1,16.4],[13.5,8.4,9.6,13.8,17.4,15.3]]    
+
+#doing stuff KW:
+#test_list = [[8.2,10.3,9.1,12.6,11.4,13.2],[10.2,9.1,13.9,14.5,9.1,16.4],[13.5,8.4,9.6,13.8,17.4,15.3]]    
+test_list = read_csv("test.csv")
+test_list = convert(test_list)
 print kruskal_willis(test_list, False)
+
 
