@@ -51,6 +51,11 @@ eligible_institutions = [
 ]
 
 def is_there(account_first_number):
+    """
+    Verify if the account is on the system.
+    :param account_first_number:
+    :return: True in case it is.
+    """
     elegible_inst_numbers = []
     for each_bank in eligible_institutions:
         elegible_inst_numbers.append(each_bank['transit_number'])
@@ -92,10 +97,10 @@ def find_name2(new_dict, account):
             else: # so p1 == account
                 return new_dict[(p1,p2)]
 
-def create_new_dict():
+def create_new_ds():
     """
-    Create a new dict with the keys of both: transit+institution
-    :return:
+    Create a new dict with the keys of both: transit+institution.
+    :return: New dictionary with for banks.
     """
     bank_name = {}
     for each_bank in eligible_institutions:
@@ -110,8 +115,9 @@ def create_new_dict():
 def account_name(client_banks):
     """
     This function will find the name of a bank from a client's account.
+    return: Result for each bank in a client list.
     """
-    dict_banks = create_new_dict()
+    dict_banks = create_new_ds()
     result = []
     for each in client_banks:
         # client_bank_accounts[0]
@@ -137,4 +143,5 @@ def do_test():
     assert result2 == account_name(client_bank_accounts2), "ERROR"
     assert result3 == account_name(client_bank_accounts3), "ERROR"
 
+##Execute the test:
 do_test()
