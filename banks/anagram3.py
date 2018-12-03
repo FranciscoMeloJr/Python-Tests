@@ -26,9 +26,7 @@ def validate(words):
                     result[key] = list_values
 
     #list comprehension for final list:
-    final = [result.get(each_key)[0] for each_key in result.keys()]
-    print(final)
-    return final
+    return [result.get(each_key)[0] for each_key in result.keys()]
 
 
 def test_assertions():

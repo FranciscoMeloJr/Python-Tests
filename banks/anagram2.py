@@ -10,7 +10,7 @@ def validate(words):
     # Eliminate duplicate words:
     words = list(set(words))
     # Order:
-    words = sorted(words)
+    words = sorted(words, key=len)
 
     #Final result
     final = []
@@ -23,7 +23,7 @@ def validate(words):
     for i in range(1, len(words)):
         flag = True
         for each in final:
-            if set(words[i]) == set(each) and len(words[i]) == len(each):
+            if len(words[i]) == len(each) and set(words[i]) == set(each):
                 flag = False
         if flag:
             final.append(words[i])

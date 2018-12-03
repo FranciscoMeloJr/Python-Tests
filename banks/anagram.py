@@ -29,17 +29,6 @@ def test():
     list_a = [string_c, string_c, string_a, string_b, string_d, string_e, string_f]
     exp = ['toto']
 
-def not_in(word, list_words):
-    """
-    Verify if a word is not on the list - actually a set.
-    """
-    if len(list_words) < 1:
-        return True
-    comparative_set = set(list_words)
-    print("Set", comparative_set)
-    print("Word", word)
-    if word in comparative_set:
-        return False
 
 def validate(words):
     """
