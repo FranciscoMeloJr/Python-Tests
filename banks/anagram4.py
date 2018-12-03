@@ -19,16 +19,13 @@ def validate(words):
         return []
     final.append(words[0])
 
-    flag = True
-    for i in range(1, len(words)):
-        flag = True
-        for each in final:
-            if len(words[i]) == len(each) and set(words[i]) == set(each):
-                flag = False
-        if flag:
-            final.append(words[i])
-    return final
+    #number_list = [ x for x in range(20) if x % 2 == 0]
 
+    final = [words[0]]
+    final = [ words[i] for i in range(1, len(words)) for j in range(0, len(final)) if len(words[i]) == len(final[j]) if set(words[i]) != set(final[j])]
+
+    print(final)
+    return final
 
 def test_assertions():
     #validate:
