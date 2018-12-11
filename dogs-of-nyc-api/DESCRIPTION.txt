@@ -71,6 +71,18 @@ Observations:
 1. To run in linux at the background using python api.py &. To finish it: Use the command 'sudo netstat -tulnp | grep :5000' to find the process at door 5000 then to just kill the process.
 2. The average unit tests are taking 0.669s. Profiling will show that most of the time is spent on the query at google, so to speed-up it's possible to use a local memory for common queries.
 
+Deliverables:
+1. Deployed at http://35.243.255.204:5000
+2. https://github.com/FranciscoMeloJr/Python-Tests/tree/master/dogs-of-nyc-api
+
+Time:
+I finished the local code at 12:30am, and I spent all the rest of the time setting up the instances at google cloud services, which I think was a very important part of the drill.
+
+
+Final comment:
+I really liked to do the project, even with the remote instances not taking so much time to work. I think it's not difficult and can be done in 2h or less if all the environment is properly set.
+
+
 Sources:
 
 1. https://www.fullstackpython.com/flask.html
