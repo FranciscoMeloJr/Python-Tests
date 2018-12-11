@@ -1,0 +1,8 @@
+Name: Francisco de Melo
+
+Description
+
+1. PostMan to do the get/post tests and export the query script.
+2. Flask for the development
+3. For the unit test it worked great and I used the -v to see which ones were failing.
+
