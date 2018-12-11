@@ -47,6 +47,7 @@ def create_query_dict(query_string):
 
     request_data ={each.split('=')[0]: each.split('=')[1] for each in query_string.split('&')}
     # iterating Over dict:
+    query_str = []
     for i, (requestKey, requestValue) in enumerate(request_data.items()):
         if i == 0:
             # Ignores case vs Match
