@@ -3,6 +3,9 @@ Name: Francisco de Melo
 I implemented the solution using Flask, it was my first time using this API.
 I wanted to try it out. The framework is pretty much straight and deploys the solutions. Later on I deployed the solution on linux Debian. 
 
+Instace access
+http://35.243.255.204:5000
+
 Description
 
 1. PostMan to do the get/post tests and export the query script.
