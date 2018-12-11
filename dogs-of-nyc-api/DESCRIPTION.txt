@@ -5,6 +5,7 @@ I wanted to try it out. The framework is pretty much straight and deploys the so
 
 Instace access
 http://35.243.255.204:5000
+Example: http://35.243.255.204:5000/count?dominant_color=brown&OTHER_THING=blue
 
 Description
 
