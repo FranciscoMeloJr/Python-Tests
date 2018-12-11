@@ -1,0 +1,38 @@
+Name: Francisco de Melo
+
+I implemented the solution using Flask, it was my first time using this API.
+I wanted to try it out. The framework is pretty much straight and deploys the solutions. Later on I deployed the solution on linux Debian. 
+
+Instace access
+http://35.243.255.204:5000
+Example: http://35.243.255.204:5000/count?dominant_color=brown&OTHER_THING=blue
+
+Description
+
+1. PostMan to do the get/post tests and export the query script.
+2. Flask for the development
+3. For the unit test it worked great and I used the -v to see which ones were failing.
+4. Between 'CONSTAINS IGNORING CASE' and 'MATCH', is the exact comparison. Match is the exact comparison.
+5. PEP Standard
+
+Issues:
+1. Python version installation 2.7 vs 3.5
+2. String comparion CASE INSENSITIVE
+3. Windows vs Linux
+4. Google Api Key error
+5. SQL Constains vs Match
+6. Python methods are void - string.sort()
+7. Created an Google console account
+8. Sign the port 5000
+9. Debug mode on Flask
+
+Suggestions:
+1. Create a local DB, using flask_sqlalchemy 
+2. Complete the full suite
+3. Improve the unit tests for each helper function 
+
+Sources:
+1. https://www.fullstackpython.com/flask.html
+2. Stackoverflow
+
+
