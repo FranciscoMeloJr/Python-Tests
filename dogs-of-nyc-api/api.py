@@ -1,5 +1,5 @@
 #!flask/bin/python
-from flask import Flask, host, jsonify, request, abort
+from flask import Flask, jsonify, request, abort
 import requests
 
 app = Flask(__name__)
