@@ -4,6 +4,7 @@ import requests
 
 app = Flask(__name__)
 
+
 @app.route('/count', methods=['GET'])
 def get_count():
     """
@@ -16,14 +17,14 @@ def get_count():
     query_string = request.query_string
 
     if '&' not in query_string:
-        requestKey = [query_string.split('=')[0]]
-        requestValue = [query_string.split('=')[1]]
-        query_str += ' WHERE ' + str(requestKey[0]) + ' CONTAINS IGNORING CASE \'' + str(requestValue[0] + '\'')
+        request_key = [query_string.split('=')[0]]
+        request_value = [query_string.split('=')[1]]
+        query_str += ' WHERE ' + str(request_key[0]) + ' CONTAINS IGNORING CASE \'' + str(request_value[0] + '\'')
     else:
-        request_data = create_query_dict(query_string)
+        query_str = create_query_dict(query_string)
 
     #Do the query
-    jsonResponse = requests.get(base_uri + "SELECT * FROM 1pKcxc8kzJbBVzLu_kgzoAMzqYhZyUhtScXjB0BQ" + api_key, headers={'Content-Type':'application/json'})
+    json_response = requests.get(base_uri + "SELECT * FROM 1pKcxc8kzJbBVzLu_kgzoAMzqYhZyUhtScXjB0BQ" + api_key, headers={'Content-Type':'application/json'})
 
     if rowsLenght > 0:
             return jsonify({'count': rowsLenght})
