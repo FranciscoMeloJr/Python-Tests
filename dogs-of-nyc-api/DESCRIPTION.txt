@@ -20,6 +20,7 @@ Issues:
 6. Python methods are void - string.sort()
 7. Created an Google console account
 8. Sign the port 5000
+9. Debug mode on Flask
 
 Suggestions:
 1. Create a local DB, using flask_sqlalchemy 
