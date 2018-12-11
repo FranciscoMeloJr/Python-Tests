@@ -1,5 +1,5 @@
 #!flask/bin/python
-from flask import Flask, jsonify, request, abort
+from flask import Flask, host, jsonify, request, abort
 import requests
 
 app = Flask(__name__)
@@ -73,4 +73,5 @@ def bad_request_unknown_fields(fields):
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    # app.run(debug=True)
+    app.run(host='0.0.0.0')
