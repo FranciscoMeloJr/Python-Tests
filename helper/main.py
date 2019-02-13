@@ -65,11 +65,13 @@ if args.cause:
     # search Caused by:
     total = search(lines, "Caused by")
     print("Total of 'Caused by' found:", str(len(total)))
+    print("Total of 'Caused by' found:", str(len(set(total))))
 
 if args.exception:
     # search Caused by:
     total = search(lines, "Exception")
     print("Total of 'Exceptions' found:", str(len(total)))
+    print("Total of Unique 'Exceptions' found:", str(len(set(total))))
 
 if args.search:
     #search
@@ -82,8 +84,9 @@ if args.kcs:
     url = 'https://www.google.com.br/search?q=' + site + '+'
 
     # Open URL in a new tab, if a browser window is already open.
-    for line in total:
-        webbrowser.open_new_tab(url + line)
+    top = 5
+    for i in range(5):
+        webbrowser.open_new_tab(url + total[i])
 
 #google search
 if args.google:
@@ -91,13 +94,17 @@ if args.google:
     # search web:
     url = 'https://www.google.com.br/search?q='
 
-    # Open URL in a new tab, if a browser window is already open.
-    for line in total:
-        webbrowser.open_new_tab(url + line)
+    # Open URL in a new tab, if a browser window is already open - limit is 10:
+    top = 5
+    for i in range(5):
+        webbrowser.open_new_tab(url + total[i])
 
 #print
 if args.verbose:
-    print_l(lines)
+    if len(total) > 0:
+        print_l(total)
+    else:
+        print_l("There are no expceptions/caused by")
 
 #write
 if args.write:
