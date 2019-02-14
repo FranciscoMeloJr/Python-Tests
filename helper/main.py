@@ -1,3 +1,5 @@
+#version 1.2 Feb 14 
+
 # imports:
 import sys
 import argparse
@@ -23,7 +25,6 @@ parser.add_argument("-a", "--all", help="Show all", action="store_true")
 parser.add_argument("-s", "--snraw", help="Show warns", action="store_true")
 parser.add_argument("-D", "-d", "--directory", help="Do it for the whole directory", action="store_true")
 
-args = parser.parse_args()
 
 class simulation:
 
@@ -39,7 +40,12 @@ class simulation:
             file = str(args.file)
 
         # open file:
-        f = open(file, "r")
+        try:
+         f = open(file, "r")
+
+        except:
+            print "File could not be opened"
+            return 
 
         # read lines:
         lines = f.readlines()
@@ -47,68 +53,72 @@ class simulation:
 
         if args.xerror:
             # search ERROR:
+            print("Search ERROR")
             search_string = "ERROR"
-            total = search_string_file(lines, search_string, args.unique)
+            total = search_string_file(lines, search_string, args.unique,args.verbose)
 
         if args.cause:
             # search Caused by:
+            print("Search Caused by")
             search_string = "Caused by"
-            total = search_string_file(lines, search_string, args.unique)
+            total = search_string_file(lines, search_string, args.unique, args.verbose)
 
         if args.exception:
             # search Exception:
-            print("Exception")
+            print("Search Exception")
             search_string = "Exception"
-            total = search_string_file(lines, search_string, args.unique)
+            total = search_string_file(lines, search_string, args.unique,args.verbose)
 
         if args.snraw:  # if args.warns:
             # search Warns:
-            print("Warns")
+            print("Search WARNS")
             search_string = "Warns"
-            total = search_string_file(lines, search_string, args.unique)
+            total = search_string_file(lines, search_string, args.unique,args.verbose)
 
         # if args.search:
         #   search
         #    print("search")
 
         if args.kcs:
-            site = 'www.https://access.redhat.com/solutions'
+            site = 'www.https://access.redhat.com/solutions '
             search_website(total, site, top)
 
-            # google search
-            if args.google:
-                search_website(total, top)
+        # google search
+        if args.google:
+            search_website(total, top)
 
-            # print
-            if args.verbose:
-                if len(total) > 0:
-                    print_l(total)
-                else:
-                    print("There are no exceptions/caused by")
+        # print
+        if args.verbose:
+            if len(total) > 0:
+                print_l(total)
+            else:
+                print("There are no exceptions/caused by")
 
             # write
-            if args.write:
-                if args.unique:
-                    total_unique = unique_values(total)
-                    print("Size", len(total_unique))
-                    write_file("output.out", total_unique)
-                else:
-                    write_file("output.out", total)
+        if args.write:
+            if args.unique:
+                total_unique = unique_values(total)
+                print("Size", len(total_unique))
+                write_file("output.out", total_unique)
+            else:
+                write_file("output.out", total)
 
-            # do it for the whole directory:
-            if args.directory:
-                from os import listdir
-                from os.path import isfile, join
+    # do it for the whole directory:
+        if args.directory:
+            from os import listdir
+            from os.path import isfile, join
 
-                import os
+            import os
 
-                pwd = os.getcwd()
+            pwd = os.getcwd()
 
-                onlyfiles = [file for file in listdir(pwd) if isfile(join(pwd, file)) if ".log" in file]
-                for file in onlyfiles:
-                    print(file)
+            onlyfiles = [file for file in listdir(pwd) if isfile(join(pwd, file)) if ".log" in file]
+            for file in onlyfiles:
+                print(file)
 
             # close file:
             f.close()
 
+#parse:
+args = parser.parse_args()
 simulation(args)

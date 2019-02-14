@@ -7,7 +7,7 @@ def search(lines, sub_string):
     for line in lines:
         if int(line.find(sub_string)) > -1:
             total.append(line)
-    print(total)
+    #print(total)
     return total
 
 
@@ -33,12 +33,12 @@ def unique_values(total):
     new_total = []
     if len(total) > 1:
         for sentence in total:
-            print(total)
+            #print(total)
             new_sentence = total[1][spaces_index[1]:]
             new_total.append(new_sentence)
 
-        return set(new_total)
-    return total
+        return list(set(new_total))
+    return [total]
 
 
 # Find all spaces - Karl Knechel
@@ -47,13 +47,21 @@ def find_all(a_str, sub):
 
 
 # Search a string and print the findings
-def search_string_file(lines, search_string, unique):
+def search_string_file(lines, search_string, unique, flag_print):
 # search_string = "Caused by"
     total = search(lines, search_string)
-    print("Total of " + search_string +" found:", str(len(total)))
+    
     if unique:
         total_unique = unique_values(total)
+        if flag_print:
+            print_l(total_unique)
         print("Total of Unique " + search_string + " ", str(len(total_unique)))
+        return total_unique
+
+    if flag_print:
+        print_l(total)
+    print("Total of " + search_string +" found:", str(len(total)))
+
     return total
 
 
@@ -61,12 +69,16 @@ def search_string_file(lines, search_string, unique):
 def search_website(total, site=None, top=5):
     import webbrowser
     # search web:
-    if site is not None:
-        url = 'https://www.google.com.br/search?q=site:'
     url = 'https://www.google.com.br/search?q='
+
+    if site is not None:
+        url = 'https://www.google.com.br/search?q='+ site
 
     # Open URL in a new tab, if a browser window is already open.
     limit = (top if top < len(total) else len(total))
+    print("XXXXXXXXXXX")
+    print(limit)
+    print(len(total))
+    print(total)
     for i in range(0, limit):
         webbrowser.open_new_tab(url + total[i])
-
