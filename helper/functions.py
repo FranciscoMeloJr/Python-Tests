@@ -16,10 +16,17 @@ def print_l(lines):
     for line in lines:
         print(line)
 
+def remove_time(line):
+    if (not len(line) > 2) or line.find(" ") == -1:
+        return line
+
+    spaces_index = list(find_all(line, ' '))
+    pos = spaces_index[1]+1
+    return line[pos:]
 
 # Write to file:
-def write_file(file, line):
-    print(len(line))
+def write_file(file, lines):
+    print(len(lines))
     with open(file, 'a') as out:
         for line in lines:
             out.write(line+'\n')
@@ -27,18 +34,15 @@ def write_file(file, line):
 # Unique values:
 def unique_values(total):
     #print(total[1])[spaces_index[0]:]
-    #print(total[1])[spaces_index[1]:]
-    spaces_index = list(find_all(total[0], ' '))
-
+    #spaces_index = list(find_all(total[0], ' '))
+    #pos = spaces_index[1]+1
     new_total = []
-    if len(total) > 1:
-        for sentence in total:
-            #print(total)
-            new_sentence = total[1][spaces_index[1]:]
-            new_total.append(new_sentence)
 
-        return list(set(new_total))
-    return [total]
+    if not len(total) > 1:
+        return total
+
+    new_total = [remove_time(element) for element in total]
+    return list(set(new_total))
 
 
 # Find all spaces - Karl Knechel
@@ -47,7 +51,7 @@ def find_all(a_str, sub):
 
 
 # Search a string and print the findings
-def search_string_file(lines, search_string, unique, flag_print):
+def search_string_file(lines: [str], search_string: str, unique: bool=False, flag_print: bool=False) -> object:
 # search_string = "Caused by"
     total = search(lines, search_string)
     

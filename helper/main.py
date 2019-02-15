@@ -5,9 +5,6 @@ import sys
 import argparse
 from functions import *
 
-# main
-print("Parser - the arguments are: ", str(sys.argv))
-
 # parser:
 parser = argparse.ArgumentParser(description="Parser of Log files")
 
@@ -26,52 +23,56 @@ parser.add_argument("-s", "--snraw", help="Show warns", action="store_true")
 parser.add_argument("-D", "-d", "--directory", help="Do it for the whole directory", action="store_true")
 
 
-class simulation:
+class Simulation:
 
-    def __init__(self, args):
-        args = args
+    def __init__(self, args, file="server.log", top=5):
+        self.args = args
+        self.file = file
+        self.top = top
+        self.run()
 
-        # defaults:
-        file = "server.log"
-        top = 5
-
-        if args.file:
-            # search Caused by:
-            file = str(args.file)
-
+    def run(self):
+        print("XXXXXXXXXXXXXXXX PARSER HELPER XXXXXXXXXXXXXXXXXXXX")
+        print("File: "+ self.file)
         # open file:
-        try:
-         f = open(file, "r")
+        args = self.args
+        top = self.top
 
+        try:
+         f = open(self.file, "r")
         except:
-            print "File could not be opened"
+            print("File could not be opened")
             return 
 
         # read lines:
         lines = f.readlines()
         total = []
+        if not len(lines) > 0:
+            print("::: File empty :::")
+            return
 
+        print("Total Lines: " + str(len(lines)))
         if args.xerror:
             # search ERROR:
-            print("Search ERROR")
+            print("Search Query: ERROR")
             search_string = "ERROR"
             total = search_string_file(lines, search_string, args.unique,args.verbose)
 
         if args.cause:
             # search Caused by:
-            print("Search Caused by")
+            print("Search Query: Caused by")
             search_string = "Caused by"
             total = search_string_file(lines, search_string, args.unique, args.verbose)
 
         if args.exception:
             # search Exception:
-            print("Search Exception")
+            print("Search Query: Exception")
             search_string = "Exception"
             total = search_string_file(lines, search_string, args.unique,args.verbose)
 
         if args.snraw:  # if args.warns:
             # search Warns:
-            print("Search WARNS")
+            print("Search Query: WARNS")
             search_string = "Warns"
             total = search_string_file(lines, search_string, args.unique,args.verbose)
 
@@ -103,22 +104,36 @@ class simulation:
             else:
                 write_file("output.out", total)
 
-    # do it for the whole directory:
-        if args.directory:
-            from os import listdir
-            from os.path import isfile, join
+                # close file:
+        f.close()
 
-            import os
+        return self.file + " Total issues found " + str(len(total_unique))
 
-            pwd = os.getcwd()
 
-            onlyfiles = [file for file in listdir(pwd) if isfile(join(pwd, file)) if ".log" in file]
-            for file in onlyfiles:
-                print(file)
+def helper(args):
+    if not len(sys.argv) > 1:
+        return
 
-            # close file:
-            f.close()
+    if args.directory:
+        from os import listdir
+        from os.path import isfile, join
+        import os
 
-#parse:
+        pwd = os.getcwd()
+
+        onlyfiles = [file for file in listdir(pwd) if isfile(join(pwd, file)) if ".log" in file]
+        print("Total of: " + str(len(onlyfiles)) + " log files found")
+        for file in onlyfiles:
+            Simulation(args, file)
+    else:
+        # main
+        print("Arguments::: ", str(sys.argv))
+        if args.file:
+            Simulation(args, args.file)
+        Simulation(args)
+
+# Parser invocation:
+
+
 args = parser.parse_args()
-simulation(args)
+helper(args)

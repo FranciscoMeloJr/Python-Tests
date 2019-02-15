@@ -48,21 +48,36 @@ class TestFunctions(unittest.TestCase):
         s = f.getvalue()
         self.assertEqual(s, "xx\nxx\nxx\n")
 
+    def test_remove_time(self):
+        self.assertEqual("2", remove_time("  2"))
+        self.assertEqual("22", remove_time("22"))
+        self.assertEqual(" ", remove_time("   "))
+        self.assertEqual("  ", remove_time("  "))
+        self.assertEqual(" 2", remove_time(" 2"))
+        self.assertEqual("", remove_time(" 2 "))
+        self.assertEqual("2", remove_time(" 2 2"))
+
     def test_unique_values(self):
-        inp = ["fdsfdsfd", "fdsfdsfd"]
-        exp = ["fdsfdsfd"]
+        input1 = ["2 d dsfdsfd", "2 f dsfdsfd"]
+        exp1 = ["dsfdsfd"]
 
-        self.assertEqual("fdsfdsfd", unique_values(inp))
+        self.assertEqual(exp1, list(unique_values(input1)))
 
-        input = ["fdsfdsfd"]
-        exp = ["fdsfdsfd"]
+        input2 = ["  fdsfdsfd"]
+        exp2 = ["  fdsfdsfd"]
 
-        self.assertEqual(unique_values(input), "fdsfdsfd")
+        self.assertEqual(exp2, unique_values(input2))
 
-        input = ["fdsfdsfd", "Xfdsfdsfd"]
-        exp = ["fdsfdsfd","Xfdsfdsfd"]
+        input3 = ["fdsfdsfd", "Xfdsfdsfd"]
+        exp3 = ["fdsfdsfd","Xfdsfdsfd"]
 
-        self.assertEqual(unique_values(input), "fdsfdsfd")
+        actual = unique_values(input3)
+        self.assertTrue(len(exp3) == len(actual))
+        self.assertTrue(set(exp3) == set(actual))
+
+        input4 = ["  ", "  "]
+        exp4 = ["  "]
+        self.assertEqual(exp4, unique_values(input4))
 
     def test_find_all(self):
         self.assertEqual(0, find_all("vcxvcx", "vcxvcx")[0])
@@ -78,11 +93,28 @@ class TestFunctions(unittest.TestCase):
         lines = ["DIDO", "DIDO", "Caused by"]
         searched_sentence = "Caused by"
         flag_unique = False
-        expected = "Total of 'Caused by' found: 1\n"
+        expected = "Total of Caused by found: 1\n"
 
         f = io.StringIO()
         with redirect_stdout(f):
-            search_string_file(lines, searched_sentence, flag_unique)
+            search_string_file(lines, searched_sentence)
+        s = f.getvalue()
+        self.assertEqual(expected, s)
+
+        expected = "Total of Exception found: 0\n"
+
+        f = io.StringIO()
+        with redirect_stdout(f):
+            search_string_file(lines, "Exception")
+        s = f.getvalue()
+        self.assertEqual(expected, s)
+
+        lines= ["Exception","Exception","Exception"]
+        expected = "Total of Exception found: 3\n"
+
+        f = io.StringIO()
+        with redirect_stdout(f):
+            search_string_file(lines, "Exception")
         s = f.getvalue()
         self.assertEqual(expected, s)
 
