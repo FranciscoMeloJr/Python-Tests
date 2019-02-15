@@ -107,12 +107,17 @@ class Simulation:
                 # close file:
         f.close()
 
-        return self.file + " Total issues found " + str(len(total_unique))
+        string_return = "No issues Found on file: "+ self.file
+        if total:
+            string_return = self.file + " Total issues found " + str(len(total))
+
+        return string_return
 
 
-def helper(args):
-    if not len(sys.argv) > 1:
-        return
+def helper(args, gui_flag=False):
+    if not gui_flag:
+        if not len(sys.argv) > 1:
+            return
 
     if args.directory:
         from os import listdir
@@ -132,8 +137,13 @@ def helper(args):
             Simulation(args, args.file)
         Simulation(args)
 
-# Parser invocation:
-
+# Call Helper - GUI:
+def caller_helper(arg_d: dict):
+    args = parser.parse_args()
+    args.all = False
+    args.cause = arg_d["c"]
+    args.unique = False
+    helper(args, True)
 
 args = parser.parse_args()
 helper(args)
