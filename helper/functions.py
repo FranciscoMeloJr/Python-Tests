@@ -1,5 +1,23 @@
 #Functions:
+from exp import *
 
+#Lib of functions used in Main.py
+
+# Creates the Exceptions:
+def list_exception(exps):
+    print(len(exps))
+    for exp in exps:
+        exp.print_sentence()
+    
+
+# Creates the Exceptions:
+def create_exceptions(lines):
+    exceptions = []
+    for line in lines:
+        if "Exception" in line:
+            E = Exp(line)
+            exceptions.append(E)
+    return exceptions
 
 # Search a sub string in a list of strings#
 def search(lines, sub_string):
@@ -51,7 +69,7 @@ def find_all(a_str, sub):
 
 
 # Search a string and print the findings
-def search_string_file(lines: [str], search_string: str, unique: bool=False, flag_print: bool=False) -> object:
+def search_string_file(lines, search_string, unique, flag_print):#(lines: [str], search_string: str, unique: bool=False, flag_print: bool=False) -> object:
 # search_string = "Caused by"
     total = search(lines, search_string)
     
