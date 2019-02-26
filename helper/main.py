@@ -1,4 +1,4 @@
-#version 1.2 Feb 14 
+#version 1.2 Feb 16 
 
 # imports:
 import sys
@@ -69,6 +69,10 @@ class Simulation:
             print("Search Query: Exception")
             search_string = "Exception"
             total = search_string_file(lines, search_string, args.unique,args.verbose)
+            exps = create_exceptions(total)
+            
+            if len(exps) > 0:
+            	exps[0].print_sentence()
 
         if args.snraw:  # if args.warns:
             # search Warns:
@@ -138,7 +142,7 @@ def helper(args, gui_flag=False):
         Simulation(args)
 
 # Call Helper - GUI:
-def caller_helper(arg_d: dict):
+def caller_helper(arg_d):
     args = parser.parse_args()
     args.all = False
     args.cause = arg_d["c"]
