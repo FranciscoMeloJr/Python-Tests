@@ -21,6 +21,7 @@ parser.add_argument("-w", "--write", help="Write all Exceptions to file: defult=
 parser.add_argument("-a", "--all", help="Show all", action="store_true")
 parser.add_argument("-s", "--snraw", help="Show warns", action="store_true")
 parser.add_argument("-D", "-d", "--directory", help="Do it for the whole directory", action="store_true")
+parser.add_argument("-l", "-L", "--log", help="Redict everything to a log file", action="store_true")
 
 
 class Simulation:
@@ -125,6 +126,9 @@ def helper(gui_flag=False, *,args=None, args_dict=None):
         if not len(sys.argv) > 1:
             print("Please use help")
             return
+
+    if "log" in args_dict:
+        redirect()
 
     if "directory" in args_dict:
         from os import listdir

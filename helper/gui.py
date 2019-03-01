@@ -28,11 +28,17 @@ class ParserGUI:
         C2.pack()
         # Verbose
         self.verbose_value = IntVar()
-        # Cause by
         C3 = Checkbutton(master, text="Verbose", variable=self.verbose_value, \
                          onvalue=1, offvalue=0, height=5, \
                          width=20)
         C3.pack()
+
+        # Log to file
+        self.log_value = IntVar()
+        C4 = Checkbutton(master, text="Log to file", variable=self.log_value, \
+                         onvalue=1, offvalue=0, height=5, \
+                         width=20)
+        C4.pack()
 
         self.greet_button = Button(master, text="Select file", command=self.open_file)
         self.greet_button.pack()
@@ -55,6 +61,7 @@ class ParserGUI:
         self.args_dict["kcs"] = False
         self.args_dict["google"] = False
         self.args_dict["write"] = False
+        self.args_dict["log"] = False
 
     def open_file(self):
         from tkinter.filedialog import askopenfilename

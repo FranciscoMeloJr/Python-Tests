@@ -102,3 +102,8 @@ def search_website(total, site=None, top=5):
     print(total)
     for i in range(0, limit):
         webbrowser.open_new_tab(url + total[i])
+
+#redirect the output to file:
+def redirect(file_output="all.log"):
+    import sys
+    sys.stdout = open(file_output, "w")
