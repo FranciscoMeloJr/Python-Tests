@@ -127,7 +127,7 @@ def helper(gui_flag=False, *,args=None, args_dict=None):
             print("Please use help")
             return
 
-    if "log" in args_dict:
+    if args_dict["log"]:
         redirect()
 
     if "directory" in args_dict:
