@@ -25,9 +25,9 @@ parser.add_argument("-D", "-d", "--directory", help="Do it for the whole directo
 
 class Simulation:
 
-    def __init__(self, args, file="server.log", top=5):
-        self.args = args
-        self.file = file
+    def __init__(self, args_dict, file="server.log", top=5):
+        self.args_dict = args_dict
+        self.file = str(file)
         self.top = top
         self.run()
 
@@ -35,7 +35,7 @@ class Simulation:
         print("XXXXXXXXXXXXXXXX PARSER HELPER XXXXXXXXXXXXXXXXXXXX")
         print("File: "+ self.file)
         # open file:
-        args = self.args
+        args_dict = self.args_dict
         top = self.top
 
         try:
@@ -52,56 +52,56 @@ class Simulation:
             return
 
         print("Total Lines: " + str(len(lines)))
-        if args.xerror:
+        if args_dict["xerror"]:
             # search ERROR:
             print("Search Query: ERROR")
             search_string = "ERROR"
-            total = search_string_file(lines, search_string, args.unique,args.verbose)
+            total = search_string_file(lines, search_string, args_dict["unique"], args_dict["verbose"])
 
-        if args.cause:
+        if args_dict["cause"]:
             # search Caused by:
             print("Search Query: Caused by")
             search_string = "Caused by"
-            total = search_string_file(lines, search_string, args.unique, args.verbose)
+            total = search_string_file(lines, search_string, args_dict["unique"], args_dict["verbose"])
 
-        if args.exception:
+        if args_dict["exception"]:
             # search Exception:
             print("Search Query: Exception")
             search_string = "Exception"
-            total = search_string_file(lines, search_string, args.unique,args.verbose)
+            total = search_string_file(lines, search_string, args_dict["unique"], args_dict["verbose"])
             exps = create_exceptions(total)
             
             if len(exps) > 0:
             	exps[0].print_sentence()
 
-        if args.snraw:  # if args.warns:
+        if args_dict["snraw"]:  # if args.warns:
             # search Warns:
             print("Search Query: WARNS")
             search_string = "Warns"
-            total = search_string_file(lines, search_string, args.unique,args.verbose)
+            total = search_string_file(lines, search_string, args_dict["unique"], args_dict["verbose"])
 
         # if args.search:
         #   search
         #    print("search")
 
-        if args.kcs:
+        if args_dict["kcs"]:
             site = 'www.https://access.redhat.com/solutions '
             search_website(total, site, top)
 
         # google search
-        if args.google:
+        if args_dict["google"]:
             search_website(total, top)
 
         # print
-        if args.verbose:
+        if args_dict["verbose"]:
             if len(total) > 0:
                 print_l(total)
             else:
                 print("There are no exceptions/caused by")
 
-            # write
-        if args.write:
-            if args.unique:
+        # write
+        if args_dict["write"]:
+            if args_dict["unique"]:
                 total_unique = unique_values(total)
                 print("Size", len(total_unique))
                 write_file("output.out", total_unique)
@@ -118,12 +118,15 @@ class Simulation:
         return string_return
 
 
-def helper(args, gui_flag=False):
+def helper(gui_flag=False, *,args=None, args_dict=None):
+    if args:
+        args_dict = vars(args)
     if not gui_flag:
         if not len(sys.argv) > 1:
+            print("Please use help")
             return
 
-    if args.directory:
+    if "directory" in args_dict:
         from os import listdir
         from os.path import isfile, join
         import os
@@ -133,21 +136,20 @@ def helper(args, gui_flag=False):
         onlyfiles = [file for file in listdir(pwd) if isfile(join(pwd, file)) if ".log" in file]
         print("Total of: " + str(len(onlyfiles)) + " log files found")
         for file in onlyfiles:
-            Simulation(args, file)
+            Simulation(args_dict, file)
     else:
         # main
         print("Arguments::: ", str(sys.argv))
-        if args.file:
-            Simulation(args, args.file)
-        Simulation(args)
+        if args_dict["file"]:
+            Simulation(args_dict, args_dict["file"])
 
-# Call Helper - GUI:
-def caller_helper(arg_d):
+# Call Helper - GUI - dict to args:
+def caller_helper(args_dict):
+    print("=== Helper Caller - GUI ===")
+    helper(True, args_dict=args_dict)
+
+if __name__ == "__main__":
+    print("=== Command Line Execution ===")
     args = parser.parse_args()
-    args.all = False
-    args.cause = arg_d["c"]
-    args.unique = False
-    helper(args, True)
-
-args = parser.parse_args()
-helper(args)
+    opts = vars(args)
+    helper(args=args)

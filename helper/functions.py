@@ -80,8 +80,6 @@ def search_string_file(lines, search_string, unique, flag_print):#(lines: [str],
         print("Total of Unique " + search_string + " ", str(len(total_unique)))
         return total_unique
 
-    if flag_print:
-        print_l(total)
     print("Total of " + search_string +" found:", str(len(total)))
 
     return total
