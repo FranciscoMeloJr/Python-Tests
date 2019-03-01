@@ -69,7 +69,7 @@ def find_all(a_str, sub):
 
 
 # Search a string and print the findings
-def search_string_file(lines, search_string, unique, flag_print):#(lines: [str], search_string: str, unique: bool=False, flag_print: bool=False) -> object:
+def search_string_file(lines, search_string, unique, flag_print=False):#(lines: [str], search_string: str, unique: bool=False, flag_print: bool=False) -> object:
 # search_string = "Caused by"
     total = search(lines, search_string)
     

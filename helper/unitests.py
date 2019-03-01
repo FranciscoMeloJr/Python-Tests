@@ -52,17 +52,17 @@ class TestFunctions(unittest.TestCase):
         inp = ["fdsfdsfd", "fdsfdsfd"]
         exp = ["fdsfdsfd"]
 
-        self.assertEqual("fdsfdsfd", unique_values(inp))
+        self.assertEqual(exp, unique_values(inp))
 
         input = ["fdsfdsfd"]
         exp = ["fdsfdsfd"]
 
-        self.assertEqual(unique_values(input), "fdsfdsfd")
+        self.assertEqual(exp, unique_values(input))
 
         input = ["fdsfdsfd", "Xfdsfdsfd"]
         exp = ["fdsfdsfd","Xfdsfdsfd"]
 
-        self.assertEqual(unique_values(input), "fdsfdsfd")
+        self.assertEqual(exp, unique_values(input))
 
     def test_find_all(self):
         self.assertEqual(0, find_all("vcxvcx", "vcxvcx")[0])
@@ -78,11 +78,11 @@ class TestFunctions(unittest.TestCase):
         lines = ["DIDO", "DIDO", "Caused by"]
         searched_sentence = "Caused by"
         flag_unique = False
-        expected = "Total of 'Caused by' found: 1\n"
+        expected = "Total of Caused by found: 1\n"
 
         f = io.StringIO()
         with redirect_stdout(f):
-            search_string_file(lines, searched_sentence, flag_unique)
+            search_string_file(lines, searched_sentence, flag_unique, False)
         s = f.getvalue()
         self.assertEqual(expected, s)
 
