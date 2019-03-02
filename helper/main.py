@@ -4,6 +4,7 @@
 import sys
 import argparse
 from functions import *
+from google_query import *
 
 # parser:
 parser = argparse.ArgumentParser(description="Parser of Log files")
@@ -15,7 +16,7 @@ parser.add_argument("-e", "--exception", help="Show all exceptions", action="sto
 parser.add_argument("-x", "--xerror", help="Write all ERROR", action="store_true")
 # parser.add_argument("-s","--search", help="Returns the 10 url's for each exception found", action="store_true")
 parser.add_argument("-k", "--kcs", help="Perform the search on the KCS", action="store_true")
-parser.add_argument("-g", "--google", help="Perform the search on the Google", action="count")
+parser.add_argument("-g", "--google", help="Perform the search on the Google", action="store_true")
 parser.add_argument("-u", "--unique", help="Show the unique messages", action="store_true")
 parser.add_argument("-w", "--write", help="Write all Exceptions to file: defult=output.out", action="store_true")
 parser.add_argument("-a", "--all", help="Show all", action="store_true")
@@ -90,8 +91,10 @@ class Simulation:
             search_website(total, site, top)
 
         # google search
+        print(args_dict)
         if args_dict["google"]:
-            search_website(total, top)
+            print("=== Google Search ===== ")
+            multiple_queries(total, True)
 
         # print
         if args_dict["verbose"]:
@@ -130,7 +133,7 @@ def helper(gui_flag=False, *,args=None, args_dict=None):
     if args_dict["log"]:
         redirect()
 
-    if "directory" in args_dict:
+    if args_dict["directory"]:
         from os import listdir
         from os.path import isfile, join
         import os
@@ -143,9 +146,12 @@ def helper(gui_flag=False, *,args=None, args_dict=None):
             Simulation(args_dict, file)
     else:
         # main
+        print(args_dict)
         print("Arguments::: ", str(sys.argv))
         if args_dict["file"]:
             Simulation(args_dict, args_dict["file"])
+        else:
+            Simulation(args_dict)
 
 # Call Helper - GUI - dict to args:
 def caller_helper(args_dict):

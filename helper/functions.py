@@ -96,7 +96,6 @@ def search_website(total, site=None, top=5):
 
     # Open URL in a new tab, if a browser window is already open.
     limit = (top if top < len(total) else len(total))
-    print("XXXXXXXXXXX")
     print(limit)
     print(len(total))
     print(total)
