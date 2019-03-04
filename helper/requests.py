@@ -34,23 +34,16 @@ def parse_kcs(url="http://www.g1.globo.com"):
         dit_text['title'] = soup.title.string
 
         # Environment:
-        dit_text['env'] = soup.find_all("section", class_="field_kcs_environment_txt")
-        html_str1 = soup.find_all("section", class_="field_kcs_environment_txt")
-        soup1 = BeautifulSoup(html_str1, features="html.parser)
-        print(soup1.get_text())
-        #html_str1 = soup.find_all("section", class_="field_kcs_environment_txt")
-        #soup1 = BeautifulSoup(html_str1, features="html.parser")
-        #dit_text['env'] = soup1.get_text()
-        #print(soup1.get_text())
+        dit_text['env'] = soup.find("section", class_="field_kcs_environment_txt").text
 
         # Issue:
-        dit_text['issue'] = soup.find_all("section", class_="field_kcs_issue_txt")
+        dit_text['issue'] = soup.find("section", class_="field_kcs_issue_txt").text
 
         # Resolution:
-        dit_text['resolution'] = soup.find_all("section", class_="field_kcs_resolution_txt")
+        dit_text['resolution'] = soup.find("section", class_="field_kcs_resolution_txt").text
 
         # Observation:
-        dit_text['observation'] = soup.find_all("section", class_="field_kcs_observation_txt")
+        dit_text['observation'] = soup.find("section", class_="field_kcs_observation_txt").text
         return dit_text
     except:
         e = sys.exc_info()[0]
@@ -77,6 +70,5 @@ def view_content(url="http://www.g1.globo.com"):
     #Title:
     print(soup.title.string)
 
-
 dict_d = parse_kcs()
-#print(dict_d['env'])
+print(dict_d['env'])
