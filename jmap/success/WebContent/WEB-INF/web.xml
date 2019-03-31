@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE web-app PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.5//EN" "http://java.sun.com/dtd/web-app_2_5.dtd">
+<web-app xmlns="http://java.sun.com/xml/ns/javaee" version="2.5">
+    <display-name>WebApp-01</display-name>
+    <welcome-file-list>
+        <welcome-file>index.html</welcome-file>
+        <welcome-file>servlet.jsp</welcome-file>
+    </welcome-file-list>
+    <servlet>
+    	<description></description>
+        <servlet-name>SuccessServlet</servlet-name>
+        <servlet-class>com.SuccessServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>SuccessServlet</servlet-name>
+        <url-pattern>/SuccessServlet</url-pattern>
+    </servlet-mapping>
+</web-app>
